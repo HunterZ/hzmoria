@@ -26,7 +26,6 @@
 #include <stdio.h>
 
 #include "config.h"
-#include "constant.h"
 
 /* Signals have no significance on the Mac */
 

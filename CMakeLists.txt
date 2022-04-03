@@ -17,7 +17,6 @@ set(HZMORIA_DIST_DIR   "${HZMORIA_ROOT_DIR}/dist")   # deployment dir
 # target for building the game binary
 add_executable(${PROJECT_NAME}
   ${HZMORIA_SOURCE_DIR}/config.h
-  ${HZMORIA_SOURCE_DIR}/constant.h
   ${HZMORIA_SOURCE_DIR}/cp437utf.h
   ${HZMORIA_SOURCE_DIR}/externs.h
   ${HZMORIA_SOURCE_DIR}/types.h

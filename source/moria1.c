@@ -1,21 +1,21 @@
 /* source/moria1.c: misc code, mainly handles player movement, inventory, etc
 
-   Copyright (C) 1989-2008 James E. Wilson, Robert A. Koeneke, 
+   Copyright (C) 1989-2008 James E. Wilson, Robert A. Koeneke,
                            David J. Grabiner
 
    This file is part of Umoria.
 
-   Umoria is free software; you can redistribute it and/or modify 
+   Umoria is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    Umoria is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License 
+   You should have received a copy of the GNU General Public License
    along with Umoria.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include	<stdlib.h>
@@ -24,7 +24,6 @@
 #include <ctype.h>
 
 #include "config.h"
-#include "constant.h"
 #include "types.h"
 #include "externs.h"
 
@@ -880,7 +879,7 @@ char command;
 		disp = "";
 	      (void) sprintf(prt1,
 	            "(%c-%c%s%s%s, space to break, ESC to exit) %s which one?",
-		    from+'a', to+'a', disp, swap, 
+		    from+'a', to+'a', disp, swap,
 	            ((command == 'w' || command == 'd') ? ", 0-9" : "")
 		    , prompt);
 	  	      /* Abort everything. */
@@ -913,9 +912,9 @@ char command;
 		  else if (scr_state == INVEN_SCR)
 		    inven_screen(EQUIP_SCR);
 		}
-              else 
+              else
                 {
-                  if ((which >= '0') && (which <= '9') 
+                  if ((which >= '0') && (which <= '9')
 		      && (command != 'r') && (command != 't'))
                     {
 		      /* look for item whose inscription matches "which" */
@@ -926,7 +925,7 @@ char command;
                         m++);
                       if (m <= to)
                         item = m;
-                      else 
+                      else
                         item = -1;
 		    }
                   else if ((which >= 'A') && (which <= 'Z'))
@@ -979,7 +978,7 @@ char command;
 				{
 				  inven_drop(item, TRUE);
 				  /* As a safety measure, set the player's
-				     inven weight to 0, 
+				     inven weight to 0,
 				     when the last object is dropped*/
 				  if (inven_ctr == 0 && equip_ctr == 0)
 				    inven_weight = 0;
@@ -1078,7 +1077,7 @@ char command;
 				       inventory[item].number > 1 &&
 				       !inven_check_num(&inventory[slot]))
 				{
-				  /* this can happen if try to wield a torch, 
+				  /* this can happen if try to wield a torch,
 				     and have more than one in inventory */
 			  msg_print("You will have to drop something first.");
 				  item = -1;
@@ -1088,11 +1087,11 @@ char command;
 			    {
 			      /* OK. Wear it. */
 			      free_turn_flag = FALSE;
-			      
+
 			      /* first remove new item from inventory */
 			      tmp_obj = inventory[item];
 			      i_ptr = &tmp_obj;
-			      
+
 			      wear_high--;
 			      /* Fix for torches	   */
 			      if (i_ptr->number > 1
@@ -1103,7 +1102,7 @@ char command;
 				}
 			      inven_weight += i_ptr->weight*i_ptr->number;
 			      inven_destroy(item);	/* Subtracts weight */
-			      
+
 			      /* second, add old item to inv and remove from
 				 equipment list, if necessary */
 			      i_ptr = &inventory[slot];
@@ -1111,14 +1110,14 @@ char command;
 				{
 				  tmp2 = inven_ctr;
 				  tmp = inven_carry(i_ptr);
-				  /* if item removed did not stack 
-				     with anything in inventory, 
+				  /* if item removed did not stack
+				     with anything in inventory,
 				     then increment wear_high */
 				  if (inven_ctr != tmp2)
 				    wear_high++;
 				  takeoff(slot, tmp);
 				}
-			      
+
 			      /* third, wear new item */
 			      *i_ptr = tmp_obj;
 			      equip_ctr++;
@@ -1136,7 +1135,7 @@ char command;
 			      while (tmp != slot)
 				if (inventory[tmp++].tval != TV_NOTHING)
 				  item++;
-			      
+
 			      (void) sprintf(prt1, "%s %s (%c)", string, prt2,
 					     'a'+item);
 			      msg_print(prt1);
@@ -1152,7 +1151,7 @@ char command;
 				{
 				  msg_print("Oops! It feels deathly cold!");
 				  add_inscribe(i_ptr, ID_DAMD);
-				  /* To force a cost of 0, 
+				  /* To force a cost of 0,
 				     even if unidentified. */
 				  i_ptr->cost = -1;
 				}
@@ -1310,8 +1309,8 @@ char *message;
 			   (i_scr > 0 ? "Equip" : "Inven"), pmt);
 	  else
 	    (void) sprintf(out_val,
-			   "(Items %c-%c,%s%s ESC to exit) %s", 
-			   i+'a', j+'a',			   
+			   "(Items %c-%c,%s%s ESC to exit) %s",
+			   i+'a', j+'a',
 			   (i_scr > 0 ? " 0-9," : ""),
 			   (redraw ? "" : " * for inventory list,"), pmt);
 	  test_flag = FALSE;
@@ -1392,13 +1391,13 @@ char *message;
                     {
                      register int m;
                        for (m = i;
-                         (m < INVEN_WIELD) 
+                         (m < INVEN_WIELD)
 			    && ((inventory[m].inscrip[0] != which)
 				|| (inventory[m].inscrip[1] != '\0'));
                          m++);
                        if (m < INVEN_WIELD)
                          *com_val = m;
-                       else 
+                       else
                          *com_val = -1;
                      }
                   else if (isupper((int)which))

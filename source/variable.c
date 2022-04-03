@@ -23,7 +23,6 @@ char *copyright[17] = {
 #include <stdio.h>
 
 #include "config.h"
-#include "constant.h"
 #include "types.h"
 
 /* Save the store's last increment value.  */

@@ -22,7 +22,6 @@
 #include <stdio.h>
 
 #include "config.h"
-#include "constant.h"
 #include "types.h"
 
 #ifdef Pyramid

@@ -150,7 +150,6 @@ typedef struct { int stuff; } fpvmach;
 /* These are included after other includes (particularly curses.h)
    to avoid redefintion warnings. */
 
-#include "constant.h"
 #include "types.h"
 #include "externs.h"
 

@@ -1,27 +1,26 @@
 /* source/misc3.c: misc code for maintaining the dungeon, printing player info
 
-   Copyright (C) 1989-2008 James E. Wilson, Robert A. Koeneke, 
+   Copyright (C) 1989-2008 James E. Wilson, Robert A. Koeneke,
                            David J. Grabiner
 
    This file is part of Umoria.
 
-   Umoria is free software; you can redistribute it and/or modify 
+   Umoria is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    Umoria is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License 
+   You should have received a copy of the GNU General Public License
    along with Umoria.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include	<stdio.h>
 
 #include "config.h"
-#include "constant.h"
 #include "types.h"
 #include "externs.h"
 
@@ -139,7 +138,7 @@ int level,must_be_small;
 	{
 	  if (randint(2) == 1)
 	    i = randint(t_level[level]) - 1;
-	  else	
+	  else
 	    /* Choose three objects, pick the highest level. */
 	    {
 	      i = randint(t_level[level]) - 1;
@@ -156,7 +155,7 @@ int level,must_be_small;
 		i = randint(t_level[j]-t_level[j-1]) - 1 + t_level[j-1];
 	    }
 	}
-      while ((must_be_small) 
+      while ((must_be_small)
 	     && (set_large(&object_list[sorted_objects[i]])));
     }
   return(i);
@@ -2072,7 +2071,7 @@ void prt_experience()
   if (p_ptr->exp > MAX_EXP)
     p_ptr->exp = MAX_EXP;
 
-  while ((p_ptr->lev < MAX_PLAYER_LEVEL) && 
+  while ((p_ptr->lev < MAX_PLAYER_LEVEL) &&
 	 (player_exp[p_ptr->lev-1] * p_ptr->expfact / 100) <= p_ptr->exp)
     gain_level();
 
@@ -2232,7 +2231,7 @@ int show_sign;
   tmp_str = object_str;
   do
     {
-      string = index(tmp_str, mtc_str[0]);
+      string = strchr(tmp_str, mtc_str[0]);
       if (string == 0)
 	flag = 0;
       else

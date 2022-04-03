@@ -19,7 +19,6 @@
 #endif /* __TURBOC__ */
 
 #include "config.h"
-#include "constant.h"
 #include "types.h"
 
 #if defined(GEMDOS) && (__STDC__ == 0) && !defined(ATARIST_TC)

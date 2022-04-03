@@ -1,28 +1,27 @@
 /* source/spells.c: player/creature spells, breaths, wands, scrolls, etc. code
 
-   Copyright (C) 1989-2008 James E. Wilson, Robert A. Koeneke, 
+   Copyright (C) 1989-2008 James E. Wilson, Robert A. Koeneke,
                            David J. Grabiner
 
    This file is part of Umoria.
 
-   Umoria is free software; you can redistribute it and/or modify 
+   Umoria is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    Umoria is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of 
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License 
+   You should have received a copy of the GNU General Public License
    along with Umoria.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include	<stdio.h>
 #include	<stdlib.h>
- 
+
 #include "config.h"
-#include "constant.h"
 #include "types.h"
 #include "externs.h"
 
@@ -499,7 +498,7 @@ int td_destroy()
 		if (delete_object(i, j))
 		  destroy = TRUE;
 	      }
-	    else if ((t_list[c_ptr->tptr].tval == TV_CHEST) 
+	    else if ((t_list[c_ptr->tptr].tval == TV_CHEST)
 		     && (t_list[c_ptr->tptr].flags != 0))
 	      {
 		/* destroy traps on chest and unlock */
@@ -1913,7 +1912,7 @@ int sleep_monsters2()
       m_ptr = &m_list[i];
       r_ptr = &c_list[m_ptr->mptr];
       monster_name (m_name, m_ptr, r_ptr);
-      if ((m_ptr->cdis > MAX_SIGHT) || 
+      if ((m_ptr->cdis > MAX_SIGHT) ||
 	  !los(char_row, char_col, (int)m_ptr->fy, (int)m_ptr->fx))
 	/* do nothing */
 	;
@@ -2553,7 +2552,7 @@ int16 limit; /* maximum bonus allowed; usually 10, but weapon's maximum damage
 		when enchanting melee weapons to damage */
 {
   register int chance, res;
-  
+
   if (limit <= 0) /* avoid randint(0) call */
     return(FALSE);
   chance = 0;
