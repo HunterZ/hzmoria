@@ -19,7 +19,6 @@
 #endif /* __TURBOC__ */
 
 #include "config.h"
-#include "types.h"
 
 #if defined(GEMDOS) && (__STDC__ == 0) && !defined(ATARIST_TC)
 #include <access.h>
@@ -193,7 +192,7 @@ void helpfile(filename)
 char *filename;
 #ifdef MAC
 {
-  mac_helpfile(filename, TRUE);
+  mac_helpfile(filename, true);
 }
 #else
 {
@@ -302,7 +301,7 @@ void print_objects()
 		  if (i_ptr->flags & TR_CURSED)
 #endif
 		    add_inscribe(i_ptr, ID_DAMD);
-		  objdes(tmp_str, i_ptr, TRUE);
+		  objdes(tmp_str, i_ptr, true);
 		  (void) fprintf(file1, "%d %s\n", i_ptr->level, tmp_str);
 		}
 	      pusht((int8u)j);
@@ -349,9 +348,9 @@ char *filename1;
 #endif
 
 #ifdef MAC
-  (void) makefilename(filename1, "Stats", TRUE);
+  (void) makefilename(filename1, "Stats", true);
   if (!doputfile("Save character description in:", filename1, &vrefnum))
-    return (FALSE);
+    return (false);
 #endif
 
 #ifndef VMS
@@ -516,7 +515,7 @@ char *filename1;
 		  case INVEN_AUX:	p = "Secondary weapon";	break;
 		  default: p = "*Unknown value*";     break;
 		  }
-		objdes(prt2, &inventory[i], TRUE);
+		objdes(prt2, &inventory[i], true);
 		(void) fprintf(file1, "  %c) %-19s: %s\n", j+'a', p, prt2);
 		j++;
 	      }
@@ -535,7 +534,7 @@ char *filename1;
 	{
 	  for (i = 0; i < inven_ctr; i++)
 	    {
-	      objdes(prt2, &inventory[i], TRUE);
+	      objdes(prt2, &inventory[i], true);
 	      (void) fprintf(file1, "%c) %s\n", i+'a', prt2);
 	    }
 	}
@@ -548,7 +547,7 @@ char *filename1;
       macendwait ();
 #endif
       prt("Completed.", 0, 0);
-      return TRUE;
+      return true;
     }
   else
     {
@@ -556,6 +555,6 @@ char *filename1;
 	(void) close (fd);
       (void) sprintf (out_val, "Can't open file %s:", filename1);
       msg_print(out_val);
-      return FALSE;
+      return false;
     }
 }

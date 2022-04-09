@@ -19,7 +19,6 @@
    along with Umoria.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "config.h"
-#include "types.h"
 #include "externs.h"
 
 #include	<stdlib.h>
@@ -112,11 +111,11 @@ int check_time()
 #endif
   tp = localtime(&clock_var);
   if (days[tp->tm_wday][tp->tm_hour+4] == 'X')
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 #else
-  return TRUE;
+  return true;
 #endif
 }
 
@@ -164,7 +163,7 @@ int mean, stand;
   low = 0;
   iindex = NORMAL_TABLE_SIZE >> 1;
   high = NORMAL_TABLE_SIZE;
-  while (TRUE)
+  while (true)
     {
       if ((normal_table[iindex] == tmp) || (high == (low+1)))
 	break;
@@ -221,9 +220,9 @@ int in_bounds(y, x)
 int y, x;
 {
   if ((y > 0) && (y < cur_height-1) && (x > 0) && (x < cur_width-1))
-    return(TRUE);
+    return(true);
   else
-    return(FALSE);
+    return(false);
 }
 
 
@@ -271,13 +270,13 @@ int y, x, force;
       panel_row = prow;
       panel_col = pcol;
       panel_bounds();
-      panel = TRUE;
+      panel = true;
       /* stop movement if any */
       if (find_bound)
 	end_find();
     }
   else
-    panel = FALSE;
+    panel = false;
   return(panel);
 }
 
@@ -289,9 +288,9 @@ register int y, x;
 {
   if ((y >= panel_row_min) && (y <= panel_row_max) &&
       (x >= panel_col_min) && (x <= panel_col_max))
-    return (TRUE);
+    return (true);
   else
-    return (FALSE);
+    return (false);
 }
 
 
@@ -382,10 +381,10 @@ int8u *array;
 /* A simple, fast, integer-based line-of-sight algorithm.  By Joseph Hall,
    4116 Brewster Drive, Raleigh NC 27606.  Email to jnh@ecemwl.ncsu.edu.
 
-   Returns TRUE if a line of sight can be traced from x0, y0 to x1, y1.
+   Returns true if a line of sight can be traced from x0, y0 to x1, y1.
 
    The LOS begins at the center of the tile [x0, y0] and ends at
-   the center of the tile [x1, y1].  If los() is to return TRUE, all of
+   the center of the tile [x1, y1].  If los() is to return true, all of
    the tiles this line passes through must be transparent, WITH THE
    EXCEPTIONS of the starting and ending tiles.
 
@@ -405,7 +404,7 @@ int fromY, fromX, toY, toX;
 
   /* Adjacent? */
   if ((deltaX < 2) && (deltaX > -2) && (deltaY < 2) && (deltaY > -2))
-    return TRUE;
+    return true;
 
   /* Handle the cases where deltaX or deltaY == 0. */
   if (deltaX == 0)
@@ -420,8 +419,8 @@ int fromY, fromX, toY, toX;
 	}
       for (p_y = fromY + 1; p_y < toY; p_y++)
 	if (cave[p_y][fromX].fval >= MIN_CLOSED_SPACE)
-	  return FALSE;
-      return TRUE;
+	  return false;
+      return true;
     }
   else if (deltaY == 0)
     {
@@ -435,8 +434,8 @@ int fromY, fromX, toY, toX;
 	}
       for (px = fromX + 1; px < toX; px++)
 	if (cave[fromY][px].fval >= MIN_CLOSED_SPACE)
-	  return FALSE;
-      return TRUE;
+	  return false;
+      return true;
     }
 
   /* Now, we've eliminated all the degenerate cases.
@@ -487,7 +486,7 @@ int fromY, fromX, toY, toX;
 	while (toX - px)
 	  {
 	    if (cave[p_y][px].fval >= MIN_CLOSED_SPACE)
-	      return FALSE;
+	      return false;
 
 	    dy += m;
 	    if (dy < scale2)
@@ -496,7 +495,7 @@ int fromY, fromX, toY, toX;
 	      {
 		p_y += ySign;
 		if (cave[p_y][px].fval >= MIN_CLOSED_SPACE)
-		  return FALSE;
+		  return false;
 		px += xSign;
 		dy -= scale;
 	      }
@@ -509,7 +508,7 @@ int fromY, fromX, toY, toX;
 		dy -= scale;
 	      }
 	  }
-	return TRUE;
+	return true;
       }
     else
       {
@@ -529,7 +528,7 @@ int fromY, fromX, toY, toX;
 	while (toY - p_y)
 	  {
 	    if (cave[p_y][px].fval >= MIN_CLOSED_SPACE)
-	      return FALSE;
+	      return false;
 	    dx += m;
 	    if (dx < scale2)
 	      p_y += ySign;
@@ -537,7 +536,7 @@ int fromY, fromX, toY, toX;
 	      {
 		px += xSign;
 		if (cave[p_y][px].fval >= MIN_CLOSED_SPACE)
-		  return FALSE;
+		  return false;
 		p_y += ySign;
 		dx -= scale;
 	      }
@@ -548,7 +547,7 @@ int fromY, fromX, toY, toX;
 		dx -= scale;
 	      }
 	  }
-	return TRUE;
+	return true;
       }
   }
 }
@@ -586,7 +585,7 @@ int y, x;
 #endif
     }
   else if (cave_ptr->fval == GRANITE_WALL || cave_ptr->fval == BOUNDARY_WALL
-	   || highlight_seams == FALSE)
+	   || highlight_seams == false)
     {
 #ifdef MSDOS
       return wallsym;
@@ -614,9 +613,9 @@ int y, x;
 
   cave_ptr = &cave[y][x];
   if (cave_ptr->pl || cave_ptr->tl || cave_ptr->fm)
-    return(TRUE);
+    return(true);
   else
-    return(FALSE);
+    return(false);
 }
 
 
@@ -642,7 +641,7 @@ void prt_map()
 
 
 /* Compact monsters					-RAK-	*/
-/* Return TRUE if any monsters were deleted, FALSE if could not delete any
+/* Return true if any monsters were deleted, false if could not delete any
    monsters.  */
 int compact_monsters()
 {
@@ -656,7 +655,7 @@ int compact_monsters()
   msg_print("Compacting monsters...");
 
   cur_dis = 66;
-  delete_any = FALSE;
+  delete_any = false;
   do
     {
       for (i = mfptr - 1; i >= MIN_MONIX; i--)
@@ -678,7 +677,7 @@ int compact_monsters()
 	      else if (hack_monptr < i)
 		{
 		  delete_monster(i);
-		  delete_any = TRUE;
+		  delete_any = true;
 		}
 	      else
 		/* fix1_delete_monster() does not decrement mfptr, so
@@ -691,11 +690,11 @@ int compact_monsters()
 	  cur_dis -= 6;
 	  /* Can't delete any monsters, return failure.  */
 	  if (cur_dis < 0)
-	    return FALSE;
+	    return false;
 	}
     }
   while (!delete_any);
-  return TRUE;
+  return true;
 }
 
 
@@ -763,7 +762,7 @@ int slp;
 
   cur_pos = popm();
   if (cur_pos == -1)
-    return FALSE;
+    return false;
   mon_ptr = &m_list[cur_pos];
   mon_ptr->fy = y;
   mon_ptr->fx = x;
@@ -776,7 +775,7 @@ int slp;
   mon_ptr->cspeed = c_list[z].speed - 10 + py.flags.speed;
   mon_ptr->stunned = 0;
   mon_ptr->cdis = distance(char_row, char_col,y,x);
-  mon_ptr->ml = FALSE;
+  mon_ptr->ml = false;
   cave[y][x].cptr = cur_pos;
   if (slp)
     {
@@ -788,7 +787,7 @@ int slp;
     }
   else
     mon_ptr->csleep = 0;
-  return TRUE;
+  return true;
 }
 
 
@@ -895,8 +894,8 @@ int slp;
       /* Dragons are always created sleeping here, so as to give the player a
 	 sporting chance.  */
       if (c_list[l].cchar == 'd' || c_list[l].cchar == 'D')
-	slp = TRUE;
-      /* Place_monster() should always return TRUE here.  It does not
+	slp = true;
+      /* Place_monster() should always return true here.  It does not
 	 matter if it fails though.  */
       (void) place_monster(y, x, l, slp);
     }
@@ -913,7 +912,7 @@ int slp;
   register cave_type *cave_ptr;
 
   i = 0;
-  summon = FALSE;
+  summon = false;
   l = get_mons_num (dun_level + MON_SUMMON_ADJ);
   do
     {
@@ -924,10 +923,10 @@ int slp;
 	  cave_ptr = &cave[j][k];
 	  if (cave_ptr->fval <= MAX_OPEN_SPACE && (cave_ptr->cptr == 0))
 	    {
-	      /* Place_monster() should always return TRUE here.  */
+	      /* Place_monster() should always return true here.  */
 	      if (!place_monster(j, k, l, slp))
-		return FALSE;
-	      summon = TRUE;
+		return false;
+	      summon = true;
 	      i = 9;
 	      *y = j;
 	      *x = k;
@@ -949,7 +948,7 @@ int *y, *x;
   register cave_type *cave_ptr;
 
   i = 0;
-  summon = FALSE;
+  summon = false;
   l = m_level[MAX_MONS_LEVEL];
   do
     {
@@ -983,10 +982,10 @@ int *y, *x;
 	  cave_ptr = &cave[j][k];
 	  if (cave_ptr->fval <= MAX_OPEN_SPACE && (cave_ptr->cptr == 0))
 	    {
-	      /* Place_monster() should always return TRUE here.  */
-	      if (! place_monster(j, k, m, FALSE))
-		return FALSE;
-	      summon = TRUE;
+	      /* Place_monster() should always return true here.  */
+	      if (! place_monster(j, k, m, false))
+		return false;
+	      summon = true;
 	      i = 9;
 	      *y = j;
 	      *x = k;
@@ -1091,9 +1090,9 @@ int magik(chance)
 int chance;
 {
   if (randint(100) <= chance)
-    return(TRUE);
+    return(true);
   else
-    return(FALSE);
+    return(false);
 }
 
 

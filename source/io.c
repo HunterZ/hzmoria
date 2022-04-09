@@ -150,7 +150,6 @@ typedef struct { int stuff; } fpvmach;
 /* These are included after other includes (particularly curses.h)
    to avoid redefintion warnings. */
 
-#include "types.h"
 #include "externs.h"
 
 #if defined(SYS_V) && defined(lint)
@@ -235,7 +234,7 @@ static int save_local_chars;
 #endif
 
 #ifndef MAC
-static int curses_on = FALSE;
+static int curses_on = false;
 static WINDOW *savescr;		/* Spare window for saving the screen. -CJS-*/
 #ifdef VMS
 static WINDOW *tempscr;		/* Spare window for VMS CTRL('R'). */
@@ -275,7 +274,7 @@ int suspend()
 #endif
   restore_term();
   (void) kill(0, SIGSTOP);
-  curses_on = TRUE;
+  curses_on = true;
   (void) ioctl(0, TIOCSETP, (char *)&tbuf);
   (void) ioctl(0, TIOCSETC, (char *)&cbuf);
   (void) ioctl(0, TIOCSLTC, (char *)&lcbuf);
@@ -428,7 +427,7 @@ void moriaterm()
 #endif
 #endif
 
-  curses_on = TRUE;
+  curses_on = true;
 #ifndef BSD4_3
   use_value crmode();
 #elif defined(VMS)
@@ -536,7 +535,7 @@ int row, col;
 /* Dump the IO buffer to terminal			-RAK-	*/
 void put_qio()
 {
-  screen_change = TRUE;	   /* Let inven_command know something has changed. */
+  screen_change = true;	   /* Let inven_command know something has changed. */
 #ifdef MAC
   UpdateScreen();
 #else
@@ -587,7 +586,7 @@ void restore_term()
   (void) ioctl(0, TIOCLSET, (char *)&save_local_chars);
 #endif
 #endif
-  curses_on = FALSE;
+  curses_on = false;
 #endif
 }
 
@@ -839,7 +838,7 @@ char inkey()
   command_count = 0;
 
   do {
-    macgetkey(&ch, FALSE);
+    macgetkey(&ch, false);
   } while (ch == CTRL('R'));
 
   dir = extractdir(ch, &shift_flag, &ctrl_flag);
@@ -857,7 +856,7 @@ char inkey()
 
   put_qio();			/* Dump IO buffer		*/
   command_count = 0;  /* Just to be safe -CJS- */
-  while (TRUE)
+  while (true)
     {
 #ifdef MSDOS
       i = msdos_getch();
@@ -912,7 +911,7 @@ char inkey()
 	  eof_flag++;
 	  /* avoid infinite loops while trying to call inkey() for a -more-
 	     prompt. */
-	  msg_flag = FALSE;
+	  msg_flag = false;
 
 	  (void) refresh ();
 	  if (!character_generated || character_saved)
@@ -921,12 +920,12 @@ char inkey()
 	  if (eof_flag > 100)
 	    {
 	      /* just in case, to make sure that the process eventually dies */
-	      panic_save = 1;
+	      panic_save = true;
 	      (void) strcpy(died_from, "(end of input: panic saved)");
 	      if (!save_char())
 		{
 		  (void) strcpy(died_from, "panic: unexpected eof");
-		  death = TRUE;
+		  death = true;
 		}
 	      exit_game();
 	    }
@@ -979,7 +978,7 @@ char inkeydir()
   command_count = 0;
 
   do {
-    macgetkey(&ch, FALSE);
+    macgetkey(&ch, false);
   } while (ch == CTRL('R'));
 
   dir = extractdir(ch, &shift_flag, &ctrl_flag);
@@ -1078,9 +1077,9 @@ void clear_screen()
     msg_print(CNIL);
 #ifdef VMS
   /* Clear doesn't work right under VMS, so use brute force. */
-  (void) clearok (stdscr, TRUE);
+  (void) clearok (stdscr, true);
   (void) wclear(stdscr);
-  (void) clearok (stdscr, FALSE);
+  (void) clearok (stdscr, false);
 #else
   (void) clear();
 #endif
@@ -1260,7 +1259,7 @@ void msg_print(str_buff)
 char *str_buff;
 {
   register int old_len, new_len;
-  int combine_messages = FALSE;
+  int combine_messages = false;
   char in_char;
 #ifdef MAC
   Rect line;
@@ -1296,7 +1295,7 @@ char *str_buff;
 	  wait_for_more = 0;
 	}
       else
-	combine_messages = TRUE;
+	combine_messages = true;
     }
 
   if (! combine_messages)
@@ -1317,7 +1316,7 @@ char *str_buff;
   if (str_buff)
     {
       command_count = 0;
-      msg_flag = TRUE;
+      msg_flag = true;
 
       /* If the new message and the old message are short enough, display
 	 them on the same line.  */
@@ -1339,7 +1338,7 @@ char *str_buff;
 	}
     }
   else
-    msg_flag = FALSE;
+    msg_flag = false;
 }
 
 
@@ -1383,9 +1382,9 @@ char *prompt;
   while(res == ' ');
   erase_line(0, 0);
   if (res == 'Y' || res == 'y')
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 }
 
 /* Prompts (optional) and returns ord value of input char	*/
@@ -1400,9 +1399,9 @@ char *command;
     prt(prompt, 0, 0);
   *command = inkey();
   if (*command == ESCAPE)
-    res = FALSE;
+    res = false;
   else
-    res = TRUE;
+    res = true;
   erase_line(MSG_LINE, 0);
   return(res);
 }
@@ -1419,9 +1418,9 @@ char *command;
     prt(prompt, 0, 0);
   *command = inkeydir();
   if (*command == ESCAPE)
-    res = FALSE;
+    res = false;
   else
-    res = TRUE;
+    res = true;
   erase_line(MSG_LINE, 0);
   return(res);
 }
@@ -1445,8 +1444,8 @@ int row, column, slen;
   cchar_t wch;
 #endif
 
-  aborted = FALSE;
-  flag	= FALSE;
+  aborted = false;
+  flag	= false;
 #ifdef MAC
   area.left = column;
   area.top = row;
@@ -1478,10 +1477,10 @@ int row, column, slen;
     switch(i)
     {
     case ESCAPE:
-      aborted = TRUE;
+      aborted = true;
       break;
     case CTRL('J'): case CTRL('M'):
-      flag = TRUE;
+      flag = true;
       break;
     case MORIA_DELETE: case CTRL('H'):
       if (column > start_col)
@@ -1513,12 +1512,12 @@ int row, column, slen;
     }
   } while (!flag && !aborted);
   if (aborted)
-    return(FALSE);
+    return(false);
   /* Remove trailing blanks	*/
   while (p > in_str && p[-1] == ' ')
     p--;
   *p = '\0';
-  return(TRUE);
+  return(true);
 }
 
 
@@ -1553,9 +1552,9 @@ int delay;
       dummy = delay;
 #endif
 #ifdef MAC
-      enablefilemenu(FALSE);
+      enablefilemenu(false);
       exit_game();
-      enablefilemenu(TRUE);
+      enablefilemenu(true);
 #else
       exit_game();
 #endif

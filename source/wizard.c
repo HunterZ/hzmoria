@@ -22,7 +22,6 @@
 #include	<stdlib.h>
 
 #include "config.h"
-#include "types.h"
 #include "externs.h"
 
 #ifdef USG
@@ -48,9 +47,9 @@ void wizard_light()
   int flag;
 
   if (cave[char_row][char_col].pl)
-    flag = FALSE;
+    flag = false;
   else
-    flag = TRUE;
+    flag = true;
   for (i = 0; i < cur_height; i++)
     for (j = 0; j < cur_width; j++)
       if (cave[i][j].fval <= MAX_CAVE_FLOOR)
@@ -60,7 +59,7 @@ void wizard_light()
 	      c_ptr = &cave[k][l];
 	      c_ptr->pl = flag;
 	      if (!flag)
-		c_ptr->fm = FALSE;
+		c_ptr->fm = false;
 	    }
   prt_map();
 }

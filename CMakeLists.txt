@@ -16,10 +16,13 @@ set(HZMORIA_DIST_DIR   "${HZMORIA_ROOT_DIR}/dist")   # deployment dir
 
 # target for building the game binary
 add_executable(${PROJECT_NAME}
+  # headers
   ${HZMORIA_SOURCE_DIR}/config.h
   ${HZMORIA_SOURCE_DIR}/cp437utf.h
   ${HZMORIA_SOURCE_DIR}/externs.h
+  ${HZMORIA_SOURCE_DIR}/hzbool.h
   ${HZMORIA_SOURCE_DIR}/types.h
+  # sources
   ${HZMORIA_SOURCE_DIR}/cp437utf.c
   ${HZMORIA_SOURCE_DIR}/create.c
   ${HZMORIA_SOURCE_DIR}/creature.c
@@ -69,6 +72,9 @@ target_link_libraries(${PROJECT_NAME}
   pdcurses_wincon
   winmm
 )
+#target_compile_options(${PROJECT_NAME}
+#  PRIVATE -Wall -Wextra -Werror -ansi -pedantic
+#)
 # assemble the binary path+name programmatically so we can get it ASAP
 # yes, this is probably hacky and fragile
 get_target_property(HZMORIA_BINARY_NAME ${PROJECT_NAME} NAME)

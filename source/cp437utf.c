@@ -21,7 +21,9 @@ const cchar_t cp437utf[256] = { \
 
 cchar_t ToUTF(const int c)
 {
-  // save off attributes, then strip them off, convert, and finally put them back on
+  /* save off attributes, then strip them off, convert, and finally put
+     them back on
+     this is probably bogus, but doesn't seem to hurt anything -BS- */
   const cchar_t attributes = c & A_ATTRIBUTES;
   const cchar_t cRaw = c & A_CHARTEXT & 0xff;
   const cchar_t utfRaw = cp437utf[cRaw];

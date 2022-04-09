@@ -21,7 +21,6 @@
 #include	<stdio.h>
 
 #include "config.h"
-#include "types.h"
 #include "externs.h"
 
 #include <ctype.h>
@@ -202,7 +201,7 @@ int typ, num;
 	else	      place_rubble(i, j); /* typ == 3 */
       } else {
 	if (typ == 4) place_gold(i, j); /* typ == 4 */
-	else	      place_object(i, j, FALSE); /* typ == 5 */
+	else	      place_object(i, j, false); /* typ == 5 */
       }
     }
 }
@@ -227,7 +226,7 @@ int y, x, num;
 	      && (cave_ptr->tptr == 0))
 	    {
 	      if (randint(100) < 75)
-		place_object(j, k, FALSE);
+		place_object(j, k, false);
 	      else
 		place_gold(j, k);
 	      i = 9;
@@ -761,10 +760,10 @@ register int stat;
 	py.stats.max_stat[stat] = tmp_stat;
       set_use_stat (stat);
       prt_stat (stat);
-      return TRUE;
+      return true;
     }
   else
-    return FALSE;
+    return false;
 }
 
 
@@ -792,14 +791,14 @@ register int stat;
       py.stats.cur_stat[stat] = tmp_stat;
       set_use_stat (stat);
       prt_stat (stat);
-      return TRUE;
+      return true;
     }
   else
-    return FALSE;
+    return false;
 }
 
 
-/* Restore a stat.  Return TRUE only if this actually makes a difference. */
+/* Restore a stat.  Return true only if this actually makes a difference. */
 int res_stat (stat)
 int stat;
 {
@@ -811,13 +810,13 @@ int stat;
       py.stats.cur_stat[stat] += i;
       set_use_stat (stat);
       prt_stat (stat);
-      return TRUE;
+      return true;
     }
-  return FALSE;
+  return false;
 }
 
 /* Boost a stat artificially (by wearing something). If the display argument
-   is TRUE, then increase is shown on the screen. */
+   is true, then increase is shown on the screen. */
 void bst_stat (stat, amount)
 int stat, amount;
 {
@@ -1171,7 +1170,7 @@ void change_name()
   vtype temp;
 #endif
 
-  flag = FALSE;
+  flag = false;
   display_char();
   do
     {
@@ -1181,23 +1180,23 @@ void change_name()
 	{
 	case 'c':
 	  get_name();
-	  flag = TRUE;
+	  flag = true;
 	  break;
 	case 'f':
 #ifdef MAC
 	  /* On mac, file_character() gets filename with std file dialog. */
 	  if (file_character ())
-	    flag = TRUE;
+	    flag = true;
 #else
 	  prt ("File name:", 0, 0);
 	  if (get_string (temp, 0, 10, 60) && temp[0])
 	    if (file_character (temp))
-	      flag = TRUE;
+	      flag = true;
 #endif
 	  break;
 	case ESCAPE: case ' ':
 	case '\n': case '\r':
-	  flag = TRUE;
+	  flag = true;
 	  break;
 	default:
 	  bell ();
@@ -1291,7 +1290,7 @@ register int item_val, drop_all;
 	  inven_weight -= i_ptr->weight;
 	  i_ptr->number--;
 	}
-      objdes (prt1, &t_list[i], TRUE);
+      objdes (prt1, &t_list[i], true);
       (void) sprintf (prt2, "Dropped %s", prt1);
       msg_print (prt2);
     }
@@ -1339,7 +1338,7 @@ register inven_type *t_ptr;
   register int i;
 
   if (inven_ctr < INVEN_WIELD)
-    return TRUE;
+    return true;
   else if (t_ptr->subval >= ITEM_SINGLE_STACK_MIN)
     for (i = 0; i < inven_ctr; i++)
       if (inventory[i].tval == t_ptr->tval &&
@@ -1350,11 +1349,11 @@ register inven_type *t_ptr;
 	  ((t_ptr->subval < ITEM_GROUP_MIN) || (inventory[i].p1 == t_ptr->p1))
 	  /* only stack if both or neither are identified */
 	  && (known1_p(&inventory[i]) == known1_p(t_ptr)))
-	return TRUE;
-  return FALSE;
+	return true;
+  return false;
 }
 
-/* return FALSE if picking up an object would change the players speed */
+/* return false if picking up an object would change the players speed */
 int inven_check_weight(i_ptr)
 register inven_type *i_ptr;
 {
@@ -1368,9 +1367,9 @@ register inven_type *i_ptr;
     i = 0;
 
   if (pack_heavy != i)
-    return FALSE;
+    return false;
   else
-    return TRUE;
+    return true;
 }
 
 
@@ -1387,16 +1386,16 @@ void check_strength()
   if (i_ptr->tval != TV_NOTHING
       && (py.stats.use_stat[A_STR]*15 < i_ptr->weight))
     {
-      if (weapon_heavy == FALSE)
+      if (weapon_heavy == false)
 	{
 	  msg_print("You have trouble wielding such a heavy weapon.");
-	  weapon_heavy = TRUE;
+	  weapon_heavy = true;
 	  calc_bonuses();
 	}
     }
-  else if (weapon_heavy == TRUE)
+  else if (weapon_heavy == true)
     {
-      weapon_heavy = FALSE;
+      weapon_heavy = false;
       if (i_ptr->tval != TV_NOTHING)
 	msg_print("You are strong enough to wield your weapon.");
       calc_bonuses();
@@ -1534,7 +1533,7 @@ int comment, nonconsec;
     {
       j = spell[i];
       s_ptr = &magic_spell[py.misc.pclass-1][j];
-      if (comment == FALSE)
+      if (comment == false)
 	p = "";
       else if ((spell_forgotten & (1L << j)) != 0)
 	p = " forgotten";
@@ -1573,13 +1572,13 @@ int first_spell;
   vtype out_str, tmp_str;
 
   *sn = -1;
-  flag = FALSE;
+  flag = false;
   (void) sprintf(out_str, "(Spells %c-%c, *=List, <ESCAPE>=exit) %s",
 		 spell[0]+'a'-first_spell, spell[num-1]+'a'-first_spell,
 		 prompt);
-  redraw = FALSE;
+  redraw = false;
   offset = (class[py.misc.pclass].spell==MAGE ? SPELL_OFFSET : PRAYER_OFFSET);
-  while (flag == FALSE && get_com (out_str, &choice))
+  while (flag == false && get_com (out_str, &choice))
     {
       if (isupper((int)choice))
 	{
@@ -1597,7 +1596,7 @@ int first_spell;
 			      spell_names[*sn+offset], s_ptr->smana,
 			      spell_chance (*sn));
 	      if (get_check (tmp_str))
-		flag = TRUE;
+		flag = true;
 	      else
 		*sn = -1;
 	    }
@@ -1612,7 +1611,7 @@ int first_spell;
 	  if (i == num)
 	    *sn = -2;
 	  else
-	    flag = TRUE;
+	    flag = true;
 	}
       else if (choice == '*')
 	{
@@ -1620,8 +1619,8 @@ int first_spell;
 	  if (!redraw)
 	    {
 	      save_screen ();
-	      redraw = TRUE;
-	      print_spells (spell, num, FALSE, first_spell);
+	      redraw = true;
+	      print_spells (spell, num, false, first_spell);
 	    }
 	}
       else if (isalpha((int)choice))
@@ -1862,7 +1861,7 @@ void gain_spells()
       (void) sprintf(tmp_str, "You can't learn any new %ss!",
 		     (stat == A_INT ? "spell" : "prayer"));
       msg_print(tmp_str);
-      free_turn_flag = TRUE;
+      free_turn_flag = true;
     }
   else
     {
@@ -1906,7 +1905,7 @@ void gain_spells()
 	{
 	  /* get to choose which mage spells will be learned */
 	  save_screen();
-	  print_spells (spells, i, FALSE, -1);
+	  print_spells (spells, i, false, -1);
 	  while (new_spells && get_com ("Learn which spell?", &query))
 	    {
 	      j = query - 'a';
@@ -1921,7 +1920,7 @@ void gain_spells()
 		    spells[j] = spells[j+1];
 		  i--;
 		  erase_line (j+1, 31);
-		  print_spells (spells, i, FALSE, -1);
+		  print_spells (spells, i, false, -1);
 		}
 	      else
 		bell();
@@ -2269,10 +2268,10 @@ int enter_wiz_mode()
   if (noscore || answer)
     {
       noscore |= 0x2;
-      wizard = TRUE;
-      return(TRUE);
+      wizard = true;
+      return(true);
     }
-  return(FALSE);
+  return(false);
 }
 
 
@@ -2442,7 +2441,7 @@ int dir;
 register int *y, *x;
 {
   register int new_row, new_col;
-  int bool;
+  bool retval;
 
   switch(dir)
     {
@@ -2483,15 +2482,15 @@ register int *y, *x;
       new_col = *x + 1;
       break;
     }
-  bool = FALSE;
+  retval = false;
   if ((new_row >= 0) && (new_row < cur_height)
       && (new_col >= 0) && (new_col < cur_width))
     {
       *y = new_row;
       *x = new_col;
-      bool = TRUE;
+      retval = true;
     }
-  return(bool);
+  return retval;
 }
 
 /* Saving throws for player character.		-RAK-	*/
@@ -2502,9 +2501,9 @@ int player_saves()
 
   if (randint(100) <= (py.misc.save + stat_adj(A_WIS)
 		       + (temp * py.misc.lev / 3)))
-    return(TRUE);
+    return(true);
   else
-    return(FALSE);
+    return(false);
 }
 
 
@@ -2520,7 +2519,7 @@ register int *j, *k;
   i = 0;
   *j = -1;
   *k = -1;
-  flag = FALSE;
+  flag = false;
   i_ptr = &inventory[0];
   while (i < inven_ctr)
     {
@@ -2528,7 +2527,7 @@ register int *j, *k;
 	{
 	  if ((i_ptr->tval == item1) || (i_ptr->tval == item2))
 	    {
-	      flag = TRUE;
+	      flag = true;
 	      *j = i;
 	    }
 	}
@@ -2570,13 +2569,13 @@ int dis;
   for (i = char_row-1; i <= char_row+1; i++)
     for (j = char_col-1; j <= char_col+1; j++)
       {
-	cave[i][j].tl = FALSE;
+	cave[i][j].tl = false;
 	lite_spot(i, j);
       }
   lite_spot(char_row, char_col);
   char_row = y;
   char_col = x;
   check_view();
-  creatures(FALSE);
-  teleport_flag = FALSE;
+  creatures(false);
+  teleport_flag = false;
 }

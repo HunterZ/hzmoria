@@ -24,7 +24,6 @@
 #include <ctype.h>
 
 #include "config.h"
-#include "types.h"
 #include "externs.h"
 
 #ifdef USG
@@ -139,23 +138,23 @@ void calc_bonuses()
     p_ptr->food_digested++;
   if (p_ptr->regenerate)
     p_ptr->food_digested -= 3;
-  p_ptr->see_inv     = FALSE;
-  p_ptr->teleport    = FALSE;
-  p_ptr->free_act    = FALSE;
-  p_ptr->slow_digest = FALSE;
-  p_ptr->aggravate   = FALSE;
-  p_ptr->sustain_str = FALSE;
-  p_ptr->sustain_int = FALSE;
-  p_ptr->sustain_wis = FALSE;
-  p_ptr->sustain_con = FALSE;
-  p_ptr->sustain_dex = FALSE;
-  p_ptr->sustain_chr = FALSE;
-  p_ptr->fire_resist = FALSE;
-  p_ptr->acid_resist = FALSE;
-  p_ptr->cold_resist = FALSE;
-  p_ptr->regenerate  = FALSE;
-  p_ptr->lght_resist = FALSE;
-  p_ptr->ffall	     = FALSE;
+  p_ptr->see_inv     = false;
+  p_ptr->teleport    = false;
+  p_ptr->free_act    = false;
+  p_ptr->slow_digest = false;
+  p_ptr->aggravate   = false;
+  p_ptr->sustain_str = false;
+  p_ptr->sustain_int = false;
+  p_ptr->sustain_wis = false;
+  p_ptr->sustain_con = false;
+  p_ptr->sustain_dex = false;
+  p_ptr->sustain_chr = false;
+  p_ptr->fire_resist = false;
+  p_ptr->acid_resist = false;
+  p_ptr->cold_resist = false;
+  p_ptr->regenerate  = false;
+  p_ptr->lght_resist = false;
+  p_ptr->ffall	     = false;
 
   old_dis_ac = m_ptr->dis_ac;
   m_ptr->ptohit	 = tohit_adj();	      /* Real To Hit   */
@@ -208,7 +207,7 @@ void calc_bonuses()
       m_ptr->dis_ac += 2;
     }
   if (p_ptr->detect_inv > 0)
-    p_ptr->see_inv = TRUE;
+    p_ptr->see_inv = true;
 
   /* can't print AC here because might be in a store */
   if (old_dis_ac != m_ptr->dis_ac)
@@ -227,62 +226,62 @@ void calc_bonuses()
     }
 #if !defined(ATARIST_MWC)
   if (TR_SLOW_DIGEST & item_flags)
-    p_ptr->slow_digest = TRUE;
+    p_ptr->slow_digest = true;
   if (TR_AGGRAVATE & item_flags)
-    p_ptr->aggravate = TRUE;
+    p_ptr->aggravate = true;
   if (TR_TELEPORT & item_flags)
-    p_ptr->teleport = TRUE;
+    p_ptr->teleport = true;
   if (TR_REGEN & item_flags)
-    p_ptr->regenerate = TRUE;
+    p_ptr->regenerate = true;
   if (TR_RES_FIRE & item_flags)
-    p_ptr->fire_resist = TRUE;
+    p_ptr->fire_resist = true;
   if (TR_RES_ACID & item_flags)
-    p_ptr->acid_resist = TRUE;
+    p_ptr->acid_resist = true;
   if (TR_RES_COLD & item_flags)
-    p_ptr->cold_resist = TRUE;
+    p_ptr->cold_resist = true;
   if (TR_FREE_ACT & item_flags)
-    p_ptr->free_act = TRUE;
+    p_ptr->free_act = true;
   if (TR_SEE_INVIS & item_flags)
-    p_ptr->see_inv = TRUE;
+    p_ptr->see_inv = true;
   if (TR_RES_LIGHT & item_flags)
-    p_ptr->lght_resist = TRUE;
+    p_ptr->lght_resist = true;
   if (TR_FFALL & item_flags)
-    p_ptr->ffall = TRUE;
+    p_ptr->ffall = true;
 #else
   /* this avoids a bug in the Mark Williams C compiler for the Atari ST */
   holder = TR_SLOW_DIGEST;
   if (holder & item_flags)
-    p_ptr->slow_digest = TRUE;
+    p_ptr->slow_digest = true;
   holder = TR_AGGRAVATE;
   if (holder & item_flags)
-    p_ptr->aggravate = TRUE;
+    p_ptr->aggravate = true;
   holder = TR_TELEPORT;
   if (holder & item_flags)
-    p_ptr->teleport = TRUE;
+    p_ptr->teleport = true;
   holder = TR_REGEN;
   if (holder & item_flags)
-    p_ptr->regenerate = TRUE;
+    p_ptr->regenerate = true;
   holder = TR_RES_FIRE;
   if (holder & item_flags)
-    p_ptr->fire_resist = TRUE;
+    p_ptr->fire_resist = true;
   holder = TR_RES_ACID;
   if (holder & item_flags)
-    p_ptr->acid_resist = TRUE;
+    p_ptr->acid_resist = true;
   holder = TR_RES_COLD;
   if (holder & item_flags)
-    p_ptr->cold_resist = TRUE;
+    p_ptr->cold_resist = true;
   holder = TR_FREE_ACT;
   if (holder & item_flags)
-    p_ptr->free_act = TRUE;
+    p_ptr->free_act = true;
   holder = TR_SEE_INVIS;
   if (holder & item_flags)
-    p_ptr->see_inv = TRUE;
+    p_ptr->see_inv = true;
   holder = TR_RES_LIGHT;
   if (holder & item_flags)
-    p_ptr->lght_resist = TRUE;
+    p_ptr->lght_resist = true;
   holder = TR_FFALL;
   if (holder & item_flags)
-    p_ptr->ffall = TRUE;
+    p_ptr->ffall = true;
 #endif
 
   i_ptr = &inventory[INVEN_WIELD];
@@ -295,12 +294,12 @@ void calc_bonuses()
 #endif
 	switch(i_ptr->p1)
 	  {
-	  case 1: p_ptr->sustain_str = TRUE; break;
-	  case 2: p_ptr->sustain_int = TRUE; break;
-	  case 3: p_ptr->sustain_wis = TRUE; break;
-	  case 4: p_ptr->sustain_con = TRUE; break;
-	  case 5: p_ptr->sustain_dex = TRUE; break;
-	  case 6: p_ptr->sustain_chr = TRUE; break;
+	  case 1: p_ptr->sustain_str = true; break;
+	  case 2: p_ptr->sustain_int = true; break;
+	  case 3: p_ptr->sustain_wis = true; break;
+	  case 4: p_ptr->sustain_con = true; break;
+	  case 5: p_ptr->sustain_dex = true; break;
+	  case 6: p_ptr->sustain_chr = true; break;
 	  default: break;
 	  }
       i_ptr++;
@@ -339,7 +338,7 @@ char *mask;
     {
       if (mask == CNIL || mask[i])
 	{
-	  objdes(tmp_val, &inventory[i], TRUE);
+	  objdes(tmp_val, &inventory[i], true);
 	  tmp_val[lim] = 0;	 /* Truncate if too long. */
 	  (void) sprintf(out_val[i], "%c) %s", 'a'+i, tmp_val);
 	  l = strlen(out_val[i]) + 2;
@@ -476,7 +475,7 @@ int weight, col;
 	    default:
 	      prt1 = "Unknown value"; break;
 	    }
-	  objdes(prt2, &inventory[i], TRUE);
+	  objdes(prt2, &inventory[i], true);
 	  prt2[lim] = 0; /* Truncate if necessary */
 	  (void) sprintf(out_val[line], "%c) %-14s: %s", line+'a',
 			 prt1, prt2);
@@ -547,7 +546,7 @@ int item_val, posn;
   else
     p = "Was wearing ";
 
-  objdes(prt2, t_ptr, TRUE);
+  objdes(prt2, t_ptr, true);
   if (posn >= 0)
     (void) sprintf(out_val, "%s%s (%c)", p, prt2, 'a'+posn);
   else
@@ -567,7 +566,7 @@ int item;
 {
   bigvtype out_str, object;
 
-  objdes(object, &inventory[item], TRUE);
+  objdes(object, &inventory[item], true);
   object[strlen(object)-1] = '?'; /* change the period to a question mark */
   (void) sprintf(out_str, "%s %s", prompt, object);
   return get_check(out_str);
@@ -681,7 +680,7 @@ char command;
   int32u holder;
 #endif
 
-  free_turn_flag = TRUE;
+  free_turn_flag = true;
   save_screen();
   /* Take up where we left off after a previous inventory command. -CJS- */
   if (doing_inven)
@@ -693,7 +692,7 @@ char command;
 	{
 	  if (command == ' ' || !get_check("Continuing with inventory command?"))
 	    {
-	      doing_inven = FALSE;
+	      doing_inven = false;
 	      return;
 	    }
 	  scr_left = 50;
@@ -716,7 +715,7 @@ char command;
 	command = tolower((int)command);
 
       /* Simple command getting and screen selection. */
-      selecting = FALSE;
+      selecting = false;
       switch(command)
 	{
 	case 'i':	   /* Inventory	    */
@@ -742,7 +741,7 @@ char command;
 	    {
 	      if (scr_state != BLANK_SCR)
 		inven_screen(EQUIP_SCR);
-	      selecting = TRUE;
+	      selecting = true;
 	    }
 	  break;
 	case 'd':		/* Drop */
@@ -752,7 +751,7 @@ char command;
 	    msg_print("There's no room to drop anything here.");
 	  else
 	    {
-	      selecting = TRUE;
+	      selecting = true;
 	      if ((scr_state == EQUIP_SCR && equip_ctr > 0) || inven_ctr == 0)
 		{
 		  if (scr_state != BLANK_SCR)
@@ -779,7 +778,7 @@ char command;
 	    {
 	      if (scr_state != BLANK_SCR && scr_state != INVEN_SCR)
 		inven_screen(WEAR_SCR);
-	      selecting = TRUE;
+	      selecting = true;
 	    }
 	  break;
 	case 'x':
@@ -792,14 +791,14 @@ char command;
 	  else if (TR_CURSED & inventory[INVEN_WIELD].flags)
 #endif
 	    {
-	      objdes(prt1, &inventory[INVEN_WIELD], FALSE);
+	      objdes(prt1, &inventory[INVEN_WIELD], false);
 	      (void) sprintf(prt2,
 		     "The %s you are wielding appears to be cursed.", prt1);
 	      msg_print(prt2);
 	    }
 	  else
 	    {
-	      free_turn_flag = FALSE;
+	      free_turn_flag = false;
 	      tmp_obj = inventory[INVEN_AUX];
 	      inventory[INVEN_AUX] = inventory[INVEN_WIELD];
 	      inventory[INVEN_WIELD] = tmp_obj;
@@ -810,13 +809,13 @@ char command;
 	      if (inventory[INVEN_WIELD].tval != TV_NOTHING)
 		{
 		  (void) strcpy(prt1, "Primary weapon   : ");
-		  objdes(prt2, &inventory[INVEN_WIELD], TRUE);
+		  objdes(prt2, &inventory[INVEN_WIELD], true);
 		  msg_print(strcat(prt1, prt2));
 		}
 	      else
 		msg_print("No primary weapon.");
 	      /* this is a new weapon, so clear the heavy flag */
-	      weapon_heavy = FALSE;
+	      weapon_heavy = false;
 	      check_strength();
 	    }
 	  break;
@@ -870,7 +869,7 @@ char command;
 		}
 	    }
 	  if (from > to)
-	    selecting = FALSE;
+	    selecting = false;
 	  else
 	    {
 	      if (scr_state == BLANK_SCR)
@@ -885,7 +884,7 @@ char command;
 	  	      /* Abort everything. */
 	      if (!get_com(prt1, &which))
 		{
-		  selecting = FALSE;
+		  selecting = false;
 		  which = ESCAPE;
 		}
 	      /* Draw the screen and maybe exit to main prompt. */
@@ -898,7 +897,7 @@ char command;
 		  else
 		    inven_screen(INVEN_SCR);
 		  if (which == ' ')
-		    selecting = FALSE;
+		    selecting = false;
 		}
 	      /* Swap screens (for drop) */
 	      else if (which == '/' && swap[0])
@@ -976,7 +975,7 @@ char command;
 			    {
 			      if (command == 'r')
 				{
-				  inven_drop(item, TRUE);
+				  inven_drop(item, true);
 				  /* As a safety measure, set the player's
 				     inven weight to 0,
 				     when the last object is dropped*/
@@ -989,9 +988,9 @@ char command;
 				  takeoff(item, slot);
 				}
 			      check_strength();
-			      free_turn_flag = FALSE;
+			      free_turn_flag = false;
 			      if (command == 'r')
-				selecting = FALSE;
+				selecting = false;
 			    }
 			}
 		      else if (command == 'w')
@@ -1064,7 +1063,7 @@ char command;
 			      if (TR_CURSED & inventory[slot].flags)
 #endif
 				{
-				  objdes(prt1, &inventory[slot], FALSE);
+				  objdes(prt1, &inventory[slot], false);
 				  (void) sprintf(prt2, "The %s you are ", prt1);
 				  if (slot == INVEN_HEAD)
 				    (void) strcat(prt2, "wielding ");
@@ -1086,7 +1085,7 @@ char command;
 			  if (item >= 0)
 			    {
 			      /* OK. Wear it. */
-			      free_turn_flag = FALSE;
+			      free_turn_flag = false;
 
 			      /* first remove new item from inventory */
 			      tmp_obj = inventory[item];
@@ -1128,7 +1127,7 @@ char command;
 				string = "Your light source is";
 			      else
 				string = "You are wearing";
-			      objdes(prt2, i_ptr, TRUE);
+			      objdes(prt2, i_ptr, true);
 			      /* Get the right equipment letter. */
 			      tmp = INVEN_WIELD;
 			      item = 0;
@@ -1141,7 +1140,7 @@ char command;
 			      msg_print(prt1);
 			      /* this is a new weapon, so clear heavy flag */
 			      if (slot == INVEN_WIELD)
-				weapon_heavy = FALSE;
+				weapon_heavy = false;
 			      check_strength();
 #ifdef ATARIST_MWC
 			      if (i_ptr->flags & (holder = TR_CURSED))
@@ -1161,7 +1160,7 @@ char command;
 			{
 			  if (inventory[item].number > 1)
 			    {
-			      objdes(prt1, &inventory[item], TRUE);
+			      objdes(prt1, &inventory[item], true);
 			      prt1[strlen(prt1)-1] = '?';
 			      (void) sprintf(prt2, "Drop all %s [y/n]", prt1);
 			      prt1[strlen(prt1)-1] = '.';
@@ -1181,18 +1180,18 @@ char command;
 			    query = 'y';
 			  if (item >= 0)
 			    {
-			      free_turn_flag = FALSE;    /* Player turn   */
+			      free_turn_flag = false;    /* Player turn   */
 			      inven_drop(item, query == 'y');
 			      check_strength();
 			    }
-			  selecting = FALSE;
+			  selecting = false;
 			  /* As a safety measure, set the player's inven weight
 			     to 0, when the last object is dropped.  */
 			  if (inven_ctr == 0 && equip_ctr == 0)
 			    inven_weight = 0;
 			}
-		      if (free_turn_flag == FALSE && scr_state == BLANK_SCR)
-			selecting = FALSE;
+		      if (free_turn_flag == false && scr_state == BLANK_SCR)
+			selecting = false;
 		    }
 		}
 	    }
@@ -1208,7 +1207,7 @@ char command;
 	    doing_inven = ' ';	/* A dummy command to recover screen. */
 	  /* flush last message before clearing screen_change and exiting */
 	  msg_print(CNIL);
-	  screen_change = FALSE;/* This lets us know if the world changes */
+	  screen_change = false;/* This lets us know if the world changes */
 	  command = ESCAPE;
 	}
       else
@@ -1271,13 +1270,13 @@ char *message;
   register int test_flag, item;
   int full, i_scr, redraw;
 
-  item = FALSE;
-  redraw = FALSE;
+  item = false;
+  redraw = false;
   *com_val = 0;
   i_scr = 1;
   if (j > INVEN_WIELD)
     {
-      full = TRUE;
+      full = true;
       if (inven_ctr == 0)
 	{
 	  i_scr = 0;
@@ -1287,7 +1286,7 @@ char *message;
 	j = inven_ctr - 1;
     }
   else
-    full = FALSE;
+    full = false;
 
   if (inven_ctr > 0 || (full && equip_ctr > 0))
     {
@@ -1296,9 +1295,9 @@ char *message;
 	  if (redraw)
 	    {
 	      if (i_scr > 0)
-		(void) show_inven (i, j, FALSE, 80, mask);
+		(void) show_inven (i, j, false, 80, mask);
 	      else
-		(void) show_equip (FALSE, 80);
+		(void) show_equip (false, 80);
 	    }
 	  if (full)
 	    (void) sprintf(out_val,
@@ -1313,7 +1312,7 @@ char *message;
 			   i+'a', j+'a',
 			   (i_scr > 0 ? " 0-9," : ""),
 			   (redraw ? "" : " * for inventory list,"), pmt);
-	  test_flag = FALSE;
+	  test_flag = false;
 	  prt(out_val, 0, 0);
 	  do
 	    {
@@ -1321,8 +1320,8 @@ char *message;
 	      switch(which)
 		{
 		case ESCAPE:
-		  test_flag = TRUE;
-		  free_turn_flag = TRUE;
+		  test_flag = true;
+		  free_turn_flag = true;
 		  i_scr = -1;
 		  break;
 		case '/':
@@ -1338,7 +1337,7 @@ char *message;
 			  else
 			    {
 			      i_scr = 0;
-			      test_flag = TRUE;
+			      test_flag = true;
 			      if (redraw)
 				{
 				  j = equip_ctr;
@@ -1362,7 +1361,7 @@ char *message;
 			  else
 			    {
 			      i_scr = 1;
-			      test_flag = TRUE;
+			      test_flag = true;
 			      if (redraw)
 				{
 				  j = inven_ctr;
@@ -1380,9 +1379,9 @@ char *message;
 		case '*':
 		  if (!redraw)
 		    {
-		      test_flag = TRUE;
+		      test_flag = true;
 		      save_screen();
-		      redraw = TRUE;
+		      redraw = true;
 		    }
 		  break;
 		default:
@@ -1421,20 +1420,20 @@ char *message;
 			}
 		      if (isupper((int)which) && !verify("Try", *com_val))
 			{
-			  test_flag = TRUE;
-			  free_turn_flag = TRUE;
+			  test_flag = true;
+			  free_turn_flag = true;
 			  i_scr = -1;
 			  break;
 			}
-		      test_flag = TRUE;
-		      item = TRUE;
+		      test_flag = true;
+		      item = true;
 		      i_scr = -1;
 		    }
 		  else if (message)
 		    {
 		      msg_print (message);
 		      /* Set test_flag to force redraw of the question.  */
-		      test_flag = TRUE;
+		      test_flag = true;
 		    }
 		  else
 		    bell();
@@ -1464,8 +1463,8 @@ int no_light()
 
   c_ptr = &cave[char_row][char_col];
   if (!c_ptr->tl && !c_ptr->pl)
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 
@@ -1520,7 +1519,7 @@ int *dir;
   if (default_dir)	/* used in counted commands. -CJS- */
     {
       *dir = prev_dir;
-      return TRUE;
+      return true;
     }
   if (prompt == CNIL)
     prompt = "Which direction?";
@@ -1533,8 +1532,8 @@ int *dir;
       if (!get_com(prompt, &command))
 #endif
 	{
-	  free_turn_flag = TRUE;
-	  return FALSE;
+	  free_turn_flag = true;
+	  return false;
 	}
       command_count = save;
       if (rogue_like_commands)
@@ -1543,7 +1542,7 @@ int *dir;
 	{
 	  prev_dir = command - '0';
 	  *dir = prev_dir;
-	  return TRUE;
+	  return true;
 	}
       bell();
     }
@@ -1567,15 +1566,15 @@ int *dir;
       if (!get_com(prompt, &command))
 #endif
 	{
-	  free_turn_flag = TRUE;
-	  return FALSE;
+	  free_turn_flag = true;
+	  return false;
 	}
       if (rogue_like_commands)
 	command = map_roguedir(command);
       if (command >= '1' && command <= '9')
 	{
 	  *dir = command - '0';
-	  return TRUE;
+	  return true;
 	}
       bell();
     }
@@ -1616,14 +1615,14 @@ int y, x;
 	c_ptr = &cave[i][j];
 	if (c_ptr->lr && ! c_ptr->pl)
 	  {
-	    c_ptr->pl = TRUE;
+	    c_ptr->pl = true;
 	    if (c_ptr->fval == DARK_FLOOR)
 	      c_ptr->fval = LIGHT_FLOOR;
 	    if (! c_ptr->fm && c_ptr->tptr != 0)
 	      {
 		tval = t_list[c_ptr->tptr].tval;
 		if (tval >= TV_MIN_VISIBLE && tval <= TV_MAX_VISIBLE)
-		  c_ptr->fm = TRUE;
+		  c_ptr->fm = true;
 	      }
 	    print(loc_symbol(i, j), i, j);
 	  }
@@ -1654,12 +1653,12 @@ int y1, y2;
     {
       for (i = y1-1; i <= y1+1; i++)	   /* Turn off lamp light	*/
 	for (j = x1-1; j <= x1+1; j++)
-	  cave[i][j].tl = FALSE;
+	  cave[i][j].tl = false;
       if (find_flag && !find_prself)
-	light_flag = FALSE;
+	light_flag = false;
     }
   else if (!find_flag || find_prself)
-    light_flag = TRUE;
+    light_flag = true;
 
   for (i = y2-1; i <= y2+1; i++)
     for (j = x2-1; j <= x2+1; j++)
@@ -1667,14 +1666,14 @@ int y1, y2;
 	c_ptr = &cave[i][j];
 	/* only light up if normal movement */
 	if (light_flag)
-	  c_ptr->tl = TRUE;
+	  c_ptr->tl = true;
 	if (c_ptr->fval >= MIN_CAVE_WALL)
-	  c_ptr->pl = TRUE;
+	  c_ptr->pl = true;
 	else if (!c_ptr->fm && c_ptr->tptr != 0)
 	  {
 	    tval = t_list[c_ptr->tptr].tval;
 	    if ((tval >= TV_MIN_VISIBLE) && (tval <= TV_MAX_VISIBLE))
-	      c_ptr->fm = TRUE;
+	      c_ptr->fm = true;
 	  }
       }
 
@@ -1718,10 +1717,10 @@ int y2, x2;
       for (i = y1-1; i <= y1+1; i++)
 	for (j = x1-1; j <= x1+1; j++)
 	  {
-	    cave[i][j].tl = FALSE;
+	    cave[i][j].tl = false;
 	    print(loc_symbol(i, j), i, j);
 	  }
-      light_flag = FALSE;
+      light_flag = false;
     }
   else if (!find_flag || find_prself)
     print(loc_symbol(y1, x1), y1, x1);
@@ -1756,7 +1755,7 @@ int s, l;
     rest_off();
   if (l || find_flag)
     {
-      find_flag = FALSE;
+      find_flag = false;
       check_view();
     }
   flush();
@@ -1834,7 +1833,7 @@ void rest()
       if (rest_num != 0)
 	msg_print ("Invalid rest count.");
       erase_line(MSG_LINE, 0);
-      free_turn_flag = TRUE;
+      free_turn_flag = true;
     }
 }
 
@@ -1870,9 +1869,9 @@ int bth, level, pth, ac, attack_type;
   die = randint (20);
   if ((die != 1) && ((die == 20)
 		     || ((i > 0) && (randint (i) > ac))))  /* normal hit */
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 }
 
 
@@ -1888,11 +1887,11 @@ char *hit_from;
     {
       if (!death)
 	{
-	  death = TRUE;
+	  death = true;
 	  (void) strcpy(died_from, hit_from);
-	  total_winner = FALSE;
+	  total_winner = false;
 	}
-      new_level_flag = TRUE;
+      new_level_flag = true;
     }
   else
     prt_chp();

@@ -21,38 +21,35 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "hzbool.h"
+
 /* Person to bother if something goes wrong.  */
 /* Recompile files.c and misc2.c if this changes.  */
-#define WIZARD	"HunterZ"
+#define WIZARD "HunterZ"
 /* The wizard password and wizard uid are no longer used.  */
 
 /* Windows (Microsoft Visual Studio, MinGW, etc.) */
 #if defined(_MSC_VER) || defined(__MINGW32__)
-// use MSDOS code as the base
-# define MSDOS
+   /* use MSDOS code as the base */
+   #define MSDOS
 #endif
 
 /* Files used by moria, set these to valid pathnames for your system.  */
-/* HZMoria TODO: Make this 100% common
-   Should probably put everything next to the EXE
-   ...except maybe put the save file under a user folder?
-   ...and maybe support a user folder override of the config file?
-*/
 #ifdef MSDOS
 /* Files which can be in a varying place */
-   #define MORIA_CNF_NAME	"MORIA.CNF"
-   #define MORIA_GPL	      "COPYING"
-   #define MORIA_HELP	   "roglcmds.hlp"
-   #define MORIA_MOR	      "news"
-   #define MORIA_ORIG_HELP	"origcmds.hlp"
-   #define MORIA_OWIZ_HELP	"owizcmds.hlp"
-   #define MORIA_SAV	      moriasav
-   #define MORIA_SAV_NAME	"MORIA.SAV"
-   #define MORIA_TOP	      moriatop
-   #define MORIA_TOP_NAME	"scores"
-   #define MORIA_VER	      "version.hlp"
-   #define MORIA_WELCOME	"welcome.hlp"
-   #define MORIA_WIZ_HELP	"rwizcmds.hlp"
+   #define MORIA_CNF_NAME  "MORIA.CNF"
+   #define MORIA_GPL       "COPYING"
+   #define MORIA_HELP      "roglcmds.hlp"
+   #define MORIA_MOR       "news"
+   #define MORIA_ORIG_HELP "origcmds.hlp"
+   #define MORIA_OWIZ_HELP "owizcmds.hlp"
+   #define MORIA_SAV       moriasav
+   #define MORIA_SAV_NAME  "MORIA.SAV"
+   #define MORIA_TOP       moriatop
+   #define MORIA_TOP_NAME  "scores"
+   #define MORIA_VER       "version.hlp"
+   #define MORIA_WELCOME   "welcome.hlp"
+   #define MORIA_WIZ_HELP  "rwizcmds.hlp"
 #else
 /* Generic UNIX */
 /* This must be unix; change MORIA_LIB as appropriate.  */
@@ -63,7 +60,7 @@
    #define MORIA_MOR       MORIA_LIB(news)
    #define MORIA_ORIG_HELP MORIA_LIB(origcmds.hlp)
    #define MORIA_OWIZ_HELP MORIA_LIB(owizcmds.hlp)
-   #define MORIA_SAV	      "moria-save"
+   #define MORIA_SAV       "moria-save"
    #define MORIA_TOP       MORIA_LIB(scores)
    #define MORIA_VER       MORIA_LIB(version.hlp)
    #define MORIA_WELCOME   MORIA_LIB(welcome.hlp)
@@ -72,13 +69,13 @@
 
 /* This sets the default user interface.  */
 /* To use the original key bindings (keypad for movement) set ROGUE_LIKE
-   to FALSE; to use the rogue-like key bindings (vi style movement)
-   set ROGUE_LIKE to TRUE.  */
+   to false; to use the rogue-like key bindings (vi style movement)
+   set ROGUE_LIKE to true.  */
 /* If you change this, you only need to recompile main.c.  */
-#define ROGUE_LIKE FALSE
+#define ROGUE_LIKE false
 
 #if defined(__linux__) || defined(__CYGWIN__) /* Linux supports System V */
-#define SYS_V
+   #define SYS_V
 #endif
 
 /* Define USG for many systems, this is basically to select SYS V style
@@ -89,7 +86,7 @@
                   CONSTANTS
   this used to be in a separate header named constants.h, but I merged it
   into here because the two headers were programmatically forcing each
-  other to be included together and in this particular order  - BS -
+  other to be included together and in this particular order  -BS-
  **************************************************************************/
 
 /*Note to the Wizard: - RAK -                                 */
@@ -107,27 +104,11 @@
   uses the number, the program may stop working correctly.  Modify the
   constants at your own risk. */
 
-/* HZMoria TODO: Yikes - needs cleanup:
-                 - Some of these aren't used.
-                 - Some can maybe be determined programmatically?
-                 - Some should probably be enums or in data files?
-                 - A lot of these are ripe for remodeling as structs too
-                 Also:
-                 - did Ben Horst fix any of this in BMoria?
-                 - just merge it into config.h since they're conjoined anyway
-*/
-
-/* Current version number of HZMoria (x.y.z) */
-#define CUR_VERSION_MAJ 0
-#define CUR_VERSION_MIN 2
+/* Current version number of HZMoria (x.y.z)
+   Start at 6.x to signal that we're carrying on from UMoria 5.6 */
+#define CUR_VERSION_MAJ 6
+#define CUR_VERSION_MIN 0
 #define PATCH_LEVEL     0
-
-#ifndef TRUE
-#define TRUE  1
-#endif
-#ifndef FALSE
-#define FALSE 0
-#endif
 
 #define MAX_UCHAR 255
 #define MAX_SHORT 32767       /* maximum short/long signed ints */
@@ -394,12 +375,13 @@
 
 #define PY_STATS     0x3F000000L
 #define PY_STR       0x01000000L /* these 6 stat flags must be adjacent */
-// #define PY_INT       0x02000000L
-// #define PY_WIS       0x04000000L
-// #define PY_DEX       0x08000000L
-// #define PY_CON       0x10000000L
-// #define PY_CHR       0x20000000L
-
+/* these seem to be unused -BS-
+#define PY_INT       0x02000000L
+#define PY_WIS       0x04000000L
+#define PY_DEX       0x08000000L
+#define PY_CON       0x10000000L
+#define PY_CHR       0x20000000L
+*/
 #define PY_HP        0x40000000L
 #define PY_MANA      0x80000000L
 
@@ -486,19 +468,20 @@
 #define CS_FREQ       0x0000000FL
 #define CS_SPELLS     0x0001FFF0L
 #define CS_TEL_SHORT  0x00000010L
-// #define CS_TEL_LONG   0x00000020L
-// #define CS_TEL_TO     0x00000040L
-// #define CS_LGHT_WND   0x00000080L
-// #define CS_SER_WND    0x00000100L
-// #define CS_HOLD_PER   0x00000200L
-// #define CS_BLIND      0x00000400L
-// #define CS_CONFUSE    0x00000800L
-// #define CS_FEAR       0x00001000L
-// #define CS_SUMMON_MON 0x00002000L
-// #define CS_SUMMON_UND 0x00004000L
-// #define CS_SLOW_PER   0x00008000L
-// #define CS_DRAIN_MANA 0x00010000L
-
+/* these seem to be unused -BS-
+#define CS_TEL_LONG   0x00000020L
+#define CS_TEL_TO     0x00000040L
+#define CS_LGHT_WND   0x00000080L
+#define CS_SER_WND    0x00000100L
+#define CS_HOLD_PER   0x00000200L
+#define CS_BLIND      0x00000400L
+#define CS_CONFUSE    0x00000800L
+#define CS_FEAR       0x00001000L
+#define CS_SUMMON_MON 0x00002000L
+#define CS_SUMMON_UND 0x00004000L
+#define CS_SLOW_PER   0x00008000L
+#define CS_DRAIN_MANA 0x00010000L
+*/
 #define CS_BREATHE    0x00F80000L /* may also just indicate resistance */
 #define CS_BR_LIGHT   0x00080000L /* if no spell frequency set */
 #define CS_BR_GAS     0x00100000L
@@ -525,8 +508,10 @@
 
 /* inventory stacking subvals */
 /* these never stack */
-// #define ITEM_NEVER_STACK_MIN  0
-// #define ITEM_NEVER_STACK_MAX  63
+/* these seem to be unused -BS-
+#define ITEM_NEVER_STACK_MIN  0
+#define ITEM_NEVER_STACK_MAX  63
+*/
 /* these items always stack with others of same subval, always treated as
    single objects, must be power of 2 */
 #define ITEM_SINGLE_STACK_MIN 64
@@ -534,7 +519,7 @@
 /* these items stack with others only if have same subval and same p1,
    they are treated as a group for wielding, etc. */
 #define ITEM_GROUP_MIN        192
-// #define ITEM_GROUP_MAX        255
+/* #define ITEM_GROUP_MAX        255 (unused -BS-) */
 /* NOTE: items with subval 192 are treated as single objects, but only stack
    with others of same subval if have the same p1 value, only used for
    torches */
@@ -689,5 +674,20 @@
 
 /* Number of entries allowed in the scorefile.  */
 #define SCOREFILE_SIZE 1000
+
+/* Save file bit flags */
+#define SV_FIND_CUT            0x00000001L
+#define SV_FIND_EXAMINE        0x00000002L
+#define SV_FIND_PRSELF         0x00000004L
+#define SV_FIND_BOUND          0x00000008L
+#define SV_PROMPT_CARRY_FLAG   0x00000010L
+#define SV_ROGUE_LIKE_COMMANDS 0x00000020L
+#define SV_SHOW_WEIGHT_FLAG    0x00000040L
+#define SV_HIGHLIGHT_SEAMS     0x00000080L
+#define SV_FIND_IGNORE_DOORS   0x00000100L
+#define SV_SOUND_BEEP_FLAG     0x00000200L
+#define SV_DISPLAY_COUNTS      0x00000400L
+#define SV_TOTAL_WINNER        0x40000000L
+#define SV_DEATH               0x80000000L /* sign bit */
 
 #endif /* CONFIG_H */

@@ -21,7 +21,6 @@
 #include	<stdio.h>
 
 #include "config.h"
-#include "types.h"
 #include "externs.h"
 
 #if defined(LINT_ARGS)
@@ -146,15 +145,15 @@ int mon_num;
   register int i;
 
   if (wizard)
-    return TRUE;
+    return true;
   mp = &c_recall[mon_num];
   if (mp->r_cmove || mp->r_cdefense || mp->r_kills || mp->r_spells
       || mp->r_deaths)
-    return TRUE;
+    return true;
   for (i = 0; i < 4; i++)
     if (mp->r_attacks[i])
-      return TRUE;
-  return FALSE;
+      return true;
+  return false;
 }
 
 /* Print out what we have discovered about this monster. */
@@ -267,11 +266,11 @@ int mon_num;
   else
     roff("No known battles to the death are recalled.");
   /* Immediately obvious. */
-  k = FALSE;
+  k = false;
   if (cp->level == 0)
     {
       roff(" It lives in the town");
-      k = TRUE;
+      k = true;
     }
   else if (mp->r_kills)
     {
@@ -282,7 +281,7 @@ int mon_num;
       (void) sprintf(temp, " It is normally found at depths of %d feet",
 		     i * 50);
       roff(temp);
-      k = TRUE;
+      k = true;
     }
   /* the c_list speed value is 10 greater, so that it can be a int8u */
   mspeed = cp->speed - 10;
@@ -293,7 +292,7 @@ int mon_num;
       else
 	{
 	  roff(" It");
-	  k = TRUE;
+	  k = true;
 	}
       roff(" moves");
       if (rcmove & CM_RANDOM_MOVE)
@@ -333,7 +332,7 @@ int mon_num;
       else
 	{
 	  roff(" It");
-	  k = TRUE;
+	  k = true;
 	}
       roff(" does not deign to chase intruders");
     }
@@ -344,7 +343,7 @@ int mon_num;
       else
 	{
 	  roff (" It");
-	  k = TRUE;
+	  k = true;
 	}
       roff (" always moves and attacks by using magic");
     }
@@ -392,7 +391,7 @@ int mon_num;
   /* Spells known, if have been used against us.
      Breath weapons or resistance might be known only because we cast spells
      at it. */
-  k = TRUE;
+  k = true;
   j = rspells;
 #ifdef ATARIST_MWC
   holder = CS_BREATHE;
@@ -424,7 +423,7 @@ int mon_num;
 		roff(" It can breathe ");
 	      else
 		roff(" It is resistant to ");
-	      k = FALSE;
+	      k = false;
 	    }
 #ifdef ATARIST_MWC
 	  else if (j & holder)
@@ -437,7 +436,7 @@ int mon_num;
 	  roff(desc_breath[i]);
 	}
     }
-  k = TRUE;
+  k = true;
 #ifdef ATARIST_MWC
   holder = CS_SPELLS;
   for (i = 0; j & holder; i++)
@@ -460,7 +459,7 @@ int mon_num;
 	      else
 		roff(" It is");
 	      roff(" magical, casting spells which ");
-	      k = FALSE;
+	      k = false;
 	    }
 #ifdef ATARIST_MWC
 	  else if (j & holder)
@@ -498,7 +497,7 @@ int mon_num;
       roff(temp);
     }
   /* Do we know how clever they are? Special abilities. */
-  k = TRUE;
+  k = true;
   j = rcmove;
 #ifdef ATARIST_MWC
   holder = CM_SPECIAL;
@@ -522,7 +521,7 @@ int mon_num;
 	  if (k)
 	    {
 	      roff(" It can ");
-	      k = FALSE;
+	      k = false;
 	    }
 #ifdef ATARIST_MWC
 	  else if (j & holder)
@@ -538,7 +537,7 @@ int mon_num;
   if (!k)
     roff(".");
   /* Do we know its special weaknesses? Most cdefense flags. */
-  k = TRUE;
+  k = true;
   j = rcdefense;
   for (i = 0; j & CD_WEAKNESS; i++)
     {
@@ -548,7 +547,7 @@ int mon_num;
 	  if (k)
 	    {
 	      roff(" It is susceptible to ");
-	      k = FALSE;
+	      k = false;
 	    }
 	  else if (j & CD_WEAKNESS)
 	    roff(", ");

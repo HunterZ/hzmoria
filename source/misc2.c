@@ -21,9 +21,7 @@
 #include	<stdio.h>
 
 #include "config.h"
-#include "types.h"
 #include "externs.h"
-
 
 /* Chance of treasure having magic abilities		-RAK-	*/
 /* Chance increases with each dungeon level			 */
@@ -1078,7 +1076,7 @@ void set_options()
 	case 'y':
 	case 'Y':
 	  put_buffer("yes", i+1, 40);
-	  *options[i].o_var = TRUE;
+	  *options[i].o_var = true;
 	  if (i+1 < max)
 	    i++;
 	  else
@@ -1087,7 +1085,7 @@ void set_options()
 	case 'n':
 	case 'N':
 	  put_buffer("no ", i+1, 40);
-	  *options[i].o_var = FALSE;
+	  *options[i].o_var = false;
 	  if (i+1 < max)
 	    i++;
 	  else

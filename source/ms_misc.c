@@ -17,6 +17,9 @@
    You should have received a copy of the GNU General Public License
    along with Umoria.  If not, see <http://www.gnu.org/licenses/>. */
 
+#include "config.h"
+#include "externs.h"
+
 #ifdef _MSC_VER
 # include <curses.h>
 #else
@@ -38,10 +41,6 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#include "config.h"
-#include "types.h"
-#include "externs.h"
-
 #ifndef __MINGW32__
 void exit();
 static unsigned int ioctl();
@@ -51,7 +50,6 @@ extern char *getenv();
 #define PATHLEN 260 /* was 80, but windows supports 260 */
 char moriatop[PATHLEN];
 char moriasav[PATHLEN];
-int  saveprompt = TRUE;
 int8u floorsym = '.';
 int8u wallsym = '#';
 
@@ -202,8 +200,6 @@ void msdos_init()
               bp = strchr (opt, ';');
         if (bp) {
           *bp++ = '\0';
-          if (*bp == 'n' || *bp == 'N')
-            saveprompt = FALSE;
         }
         if (opt[0])
           (void) strcpy(moriasav, opt);
@@ -221,9 +217,9 @@ void msdos_init()
       if (cnt == 0)
         warn("Line %d: KEYBOARD option requires a value\n", line);
       else if (strcmpi(opt, "ROGUE") == 0)
-        rogue_like_commands = TRUE;
+        rogue_like_commands = true;
       else if (strcmpi(opt, "VMS") == 0)
-        rogue_like_commands = FALSE;
+        rogue_like_commands = false;
     }
     else
       warn("Line %d: Unknown configuration line: `%s'\n", line, buf);
@@ -446,12 +442,16 @@ int pdcurses_getch()
     case PADSLASH:     return '/';       break;
     case PADENTER:     return CTRL('M'); break;
     case CTL_PADENTER: return CTRL('M'); break;
-//    case ALT_PADENTER: return CTRL('M'); break;
+/*
+    case ALT_PADENTER: return CTRL('M'); break;
+*/
     case PADSTAR:      return '*';       break;
     case CTL_PADSLASH: return '/';       break;
     case CTL_PADSTAR:  return '*';       break;
-//    case ALT_PADSLASH: return '/';       break;
-//    case ALT_PADSTAR:  return '*';       break;
+/*
+    case ALT_PADSLASH: return '/';       break;
+    case ALT_PADSTAR:  return '*';       break;
+*/
     case SHF_PADENTER: return CTRL('M'); break;
     case SHF_PADSLASH: return '/';       break;
     case SHF_PADSTAR:  return '*';       break;

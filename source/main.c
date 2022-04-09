@@ -69,7 +69,6 @@
 #include	<stdlib.h>
 
 #include "config.h"
-#include "types.h"
 #include "externs.h"
 
 #ifndef USG
@@ -201,8 +200,8 @@ char *argv[];
 #ifndef MAC
   char *p;
 #endif
-  int new_game = FALSE;
-  int force_rogue_like = FALSE;
+  int new_game = false;
+  int force_rogue_like = false;
   int force_keys_to;
 
   /* default command set defined in config.h file */
@@ -258,25 +257,25 @@ char *argv[];
     switch (argv[0][1])
       {
       case 'N':
-      case 'n': new_game = TRUE; break;
+      case 'n': new_game = true; break;
       case 'O':
       case 'o':
 	/* rogue_like_commands may be set in get_char(), so delay this
 	   until after read savefile if any */
-	force_rogue_like = TRUE;
-	force_keys_to = FALSE;
+	force_rogue_like = true;
+	force_keys_to = false;
 	break;
       case 'R':
       case 'r':
-	force_rogue_like = TRUE;
-	force_keys_to = TRUE;
+	force_rogue_like = true;
+	force_keys_to = true;
 	break;
 #ifndef MAC
-      case 'S': display_scores(TRUE); exit_game();
-      case 's': display_scores(FALSE); exit_game();
+      case 'S': display_scores(true); exit_game();
+      case 's': display_scores(false); exit_game();
       case 'W':
       case 'w':
-	to_be_wizard = TRUE;
+	to_be_wizard = true;
 
 	if (isdigit((int)argv[0][2]))
 	  seed = atoi(&argv[0][2]);
@@ -338,13 +337,9 @@ char *argv[];
    (if you are the wizard). In this case, it returns true, but also sets the
    parameter "generate" to true, as it does not recover any cave details. */
 
-  result = FALSE;
-#ifdef MAC
-  if ((new_game == FALSE) && get_char(&generate))
-#else
-  if ((new_game == FALSE) && !access(savefile, 0) && get_char(&generate))
-#endif
-    result = TRUE;
+  result = false;
+  if ((new_game == false) && !access(savefile, 0) && get_char(&generate))
+    result = true;
 
   /* enter wizard mode before showing the character display, but must wait
      until after get_char in case it was just a resurrection */
@@ -358,7 +353,7 @@ char *argv[];
 
       /* could be restoring a dead character after a signal or HANGUP */
       if (py.misc.chp < 0)
-	death = TRUE;
+	death = true;
     }
   else
     {	  /* Create character	   */
@@ -387,7 +382,7 @@ char *argv[];
 	 and prevent signal from creating panic save until this point,
 	 all info needed for save file is now valid */
       character_generated = 1;
-      generate = TRUE;
+      generate = true;
     }
 
   if (force_rogue_like)
@@ -417,7 +412,7 @@ char *argv[];
 	      (void) strcpy(died_from, "unexpected eof");
 	    }
 	  /* should not reach here, by if we do, this guarantees exit */
-	  death = TRUE;
+	  death = true;
 	}
 #endif
 

@@ -21,7 +21,6 @@
 #include	<stdio.h>
 
 #include "config.h"
-#include "types.h"
 #include "externs.h"
 
 #ifdef USG
@@ -63,14 +62,14 @@ int y, x;
 	msg_print("You gently float down.");
       else
       {
-	objdes(tmp, t_ptr, TRUE);
+	objdes(tmp, t_ptr, true);
 	take_hit(dam, tmp);
       }
       break;
     case 2: /* Arrow trap*/
       if (test_hit(125, 0, 0, p_ptr->pac+p_ptr->ptoac, CLA_MISC_HIT))
 	{
-	  objdes(tmp, t_ptr, TRUE);
+	  objdes(tmp, t_ptr, true);
 	  take_hit(dam, tmp);
 	  msg_print("An arrow hits you.");
 	}
@@ -83,20 +82,20 @@ int y, x;
 	msg_print("You gently float down.");
       else
       {
-	objdes(tmp, t_ptr, TRUE);
+	objdes(tmp, t_ptr, true);
 	take_hit(dam, tmp);
       }
       place_trap(y, x, 0);
       break;
     case 4: /* Trap door*/
       msg_print("You fell through a trap door!");
-      new_level_flag = TRUE;
+      new_level_flag = true;
       dun_level++;
       if (py.flags.ffall)
 	msg_print("You gently float down.");
       else
 	{
-	  objdes(tmp, t_ptr, TRUE);
+	  objdes(tmp, t_ptr, true);
 	  take_hit(dam, tmp);
 	}
       /* Force the messages to display before starting to generate the
@@ -118,7 +117,7 @@ int y, x;
       break;
     case 6: /* Hid Obj*/
       (void) delete_object(y, x);
-      place_object(y, x, FALSE);
+      place_object(y, x, false);
       msg_print("Hmmm, there was something under this rock.");
       break;
     case 7:  /* STR Dart*/
@@ -127,7 +126,7 @@ int y, x;
 	  if (!py.flags.sustain_str)
 	    {
 	      (void) dec_stat(A_STR);
-	      objdes(tmp, t_ptr, TRUE);
+	      objdes(tmp, t_ptr, true);
 	      take_hit(dam, tmp);
 	      msg_print("A small dart weakens you!");
 	    }
@@ -138,7 +137,7 @@ int y, x;
 	msg_print("A small dart barely misses you.");
       break;
     case 8: /* Teleport*/
-      teleport_flag = TRUE;
+      teleport_flag = true;
       msg_print("You hit a teleport trap!");
       /* Light up the teleport trap, before we teleport away.  */
       move_light (y, x, y, x);
@@ -162,7 +161,7 @@ int y, x;
 	{
 	  ty = y;
 	  tx = x;
-	  (void) summon_monster(&ty, &tx, FALSE);
+	  (void) summon_monster(&ty, &tx, false);
 	}
       break;
     case 12: /* Fire trap*/
@@ -188,7 +187,7 @@ int y, x;
     case 17: /* Slow Dart*/
       if (test_hit(125, 0, 0, p_ptr->pac+p_ptr->ptoac, CLA_MISC_HIT))
 	{
-	  objdes(tmp, t_ptr, TRUE);
+	  objdes(tmp, t_ptr, true);
 	  take_hit(dam, tmp);
 	  msg_print("A small dart hits you!");
 	  if (py.flags.free_act)
@@ -205,7 +204,7 @@ int y, x;
 	  if (!py.flags.sustain_con)
 	    {
 	      (void) dec_stat(A_CON);
-	      objdes(tmp, t_ptr, TRUE);
+	      objdes(tmp, t_ptr, true);
 	      take_hit(dam, tmp);
 	      msg_print("A small dart saps your health!");
 	    }
@@ -317,7 +316,7 @@ int pickup;
       if (i == TV_GOLD)
 	{
 	  py.misc.au += i_ptr->cost;
-	  objdes(tmp_str, i_ptr, TRUE);
+	  objdes(tmp_str, i_ptr, true);
 	  (void) sprintf(out_val,
 			 "You have found %ld gold pieces worth of %s",
 			 i_ptr->cost, tmp_str);
@@ -331,7 +330,7 @@ int pickup;
 	    {			    /* Okay,  pick it up      */
 	      if (pickup && prompt_carry_flag)
 		{
-		  objdes(tmp_str, i_ptr, TRUE);
+		  objdes(tmp_str, i_ptr, true);
 		  /* change the period to a question mark */
 		  tmp_str[strlen(tmp_str)-1] = '?';
 		  (void) sprintf(out_val, "Pick up %s", tmp_str);
@@ -340,7 +339,7 @@ int pickup;
 	      /* Check to see if it will change the players speed. */
 	      if (pickup && !inven_check_weight(i_ptr))
 		{
-		  objdes(tmp_str, i_ptr, TRUE);
+		  objdes(tmp_str, i_ptr, true);
 		  /* change the period to a question mark */
 		  tmp_str[strlen(tmp_str)-1] = '?';
 		  (void) sprintf(out_val,
@@ -352,7 +351,7 @@ int pickup;
 	      if (pickup)
 		{
 		  locn = inven_carry(i_ptr);
-		  objdes(tmp_str, &inventory[locn], TRUE);
+		  objdes(tmp_str, &inventory[locn], true);
 		  (void) sprintf(out_val, "You have %s (%c)",tmp_str,locn+'a');
 		  msg_print(out_val);
 		  (void) delete_object(y, x);
@@ -360,7 +359,7 @@ int pickup;
 	    }
 	  else
 	    {
-	      objdes(tmp_str, i_ptr, TRUE);
+	      objdes(tmp_str, i_ptr, true);
 	      (void) sprintf(out_val, "You can't carry %s", tmp_str);
 	      msg_print(out_val);
 	    }
@@ -502,12 +501,12 @@ int y, x;
     c_ptr->fval = CORR_FLOOR;
   pusht(c_ptr->tptr);
   c_ptr->tptr = 0;
-  c_ptr->fm = FALSE;
+  c_ptr->fm = false;
   lite_spot(y, x);
   if (test_light(y, x))
-    delete = TRUE;
+    delete = true;
   else
-    delete = FALSE;
+    delete = false;
   return(delete);
 }
 
@@ -597,7 +596,7 @@ register int32u flags;
 #endif
     if (!death) /* maybe the player died in mid-turn */
       {
-	total_winner = TRUE;
+	total_winner = true;
 	prt_winner();
 	msg_print("*** CONGRATULATIONS *** You have won the game.");
 	msg_print("You cannot save this game, but you may retire when ready.");
@@ -784,7 +783,7 @@ int y, x;
 
 	  if (py.flags.confuse_monster)
 	    {
-	      py.flags.confuse_monster = FALSE;
+	      py.flags.confuse_monster = false;
 	      msg_print("Your hands stop glowing.");
 	      if ((c_list[monptr].cdefense & CD_NO_SLEEP)
 		  || (randint(MAX_MONS_LEVEL) < c_list[monptr].level))
@@ -882,7 +881,7 @@ int dir, do_pickup;
 	      /* Move character record (-1)	       */
 	      move_rec(old_row, old_col, char_row, char_col);
 	      /* Check for new panel		       */
-	      if (get_panel(char_row, char_col, FALSE))
+	      if (get_panel(char_row, char_col, false))
 		prt_map();
 	      /* Check to see if he should stop	       */
 	      if (find_flag)
@@ -945,7 +944,7 @@ int dir, do_pickup;
 		}
 	      else
 		end_find();
-	      free_turn_flag = TRUE;
+	      free_turn_flag = true;
 	    }
 	}
       else	  /* Attacking a creature! */
@@ -956,7 +955,7 @@ int dir, do_pickup;
 	  if (m_list[c_ptr->cptr].ml && old_find_flag)
 	    {
 	      /* did not do anything this turn */
-	      free_turn_flag = TRUE;
+	      free_turn_flag = true;
 	    }
 	  else
 	    {
@@ -1015,7 +1014,7 @@ int y, x;
 	{
 	  j = y;
 	  k = x;
-	  (void) summon_monster(&j, &k, FALSE);
+	  (void) summon_monster(&j, &k, false);
 	}
     }
   if (CH_EXPLODE & t_ptr->flags)
@@ -1047,7 +1046,7 @@ void openobject()
     {
       (void) mmove(dir, &y, &x);
       c_ptr = &cave[y][x];
-      no_object = FALSE;
+      no_object = false;
       if (c_ptr->cptr > 1 && c_ptr->tptr != 0 &&
 	  (t_list[c_ptr->tptr].tval == TV_CLOSED_DOOR
 	   || t_list[c_ptr->tptr].tval == TV_CHEST))
@@ -1100,21 +1099,21 @@ void openobject()
 	    i = p_ptr->disarm + 2*todis_adj() + stat_adj(A_INT)
 	      + (class_level_adj[p_ptr->pclass][CLA_DISARM] * p_ptr->lev / 3);
 	    t_ptr = &t_list[c_ptr->tptr];
-	    flag = FALSE;
+	    flag = false;
 	    if (CH_LOCKED & t_ptr->flags)
 	      if (py.flags.confused > 0)
 		msg_print("You are too confused to pick the lock.");
 	      else if ((i-(int)t_ptr->level) > randint(100))
 		{
 		  msg_print("You have picked the lock.");
-		  flag = TRUE;
+		  flag = true;
 		  py.misc.exp += t_ptr->level;
 		  prt_experience();
 		}
 	      else
 		count_msg_print("You failed to pick the lock.");
 	    else
-	      flag = TRUE;
+	      flag = true;
 	    if (flag)
 	      {
 		t_ptr->flags &= ~CH_LOCKED;
@@ -1122,13 +1121,13 @@ void openobject()
 		known2(t_ptr);
 		t_ptr->cost = 0;
 	      }
-	    flag = FALSE;
+	    flag = false;
 	    /* Was chest still trapped?	 (Snicker)   */
 	    if ((CH_LOCKED & t_ptr->flags) == 0)
 	      {
 		chest_trap(y, x);
 		if (c_ptr->tptr != 0)
-		  flag = TRUE;
+		  flag = true;
 	      }
 	    /* Chest treasure is allocated as if a creature   */
 	    /* had been killed.				   */
@@ -1146,14 +1145,14 @@ void openobject()
 	      }
 	  }
 	else
-	  no_object = TRUE;
+	  no_object = true;
       else
-	no_object = TRUE;
+	no_object = true;
 
       if (no_object)
 	{
 	  msg_print("I do not see anything you can open there.");
-	  free_turn_flag = TRUE;
+	  free_turn_flag = true;
 	}
     }
 }
@@ -1173,7 +1172,7 @@ void closeobject()
     {
       (void) mmove(dir, &y, &x);
       c_ptr = &cave[y][x];
-      no_object = FALSE;
+      no_object = false;
       if (c_ptr->tptr != 0)
 	if (t_list[c_ptr->tptr].tval == TV_OPEN_DOOR)
 	  if (c_ptr->cptr == 0)
@@ -1196,14 +1195,14 @@ void closeobject()
 	      msg_print(out_val);
 	    }
 	else
-	  no_object = TRUE;
+	  no_object = true;
       else
-	no_object = TRUE;
+	no_object = true;
 
       if (no_object)
 	{
 	  msg_print("I do not see anything you can close there.");
-	  free_turn_flag = TRUE;
+	  free_turn_flag = true;
 	}
     }
 }
@@ -1218,7 +1217,7 @@ int y, x, t1, t2;
   register cave_type *c_ptr;
   int res, found;
 
-  res = FALSE;
+  res = false;
   if (t1 > t2)
     {
       c_ptr = &cave[y][x];
@@ -1226,34 +1225,34 @@ int y, x, t1, t2;
 	{
 	  /* should become a room space, check to see whether it should be
 	     LIGHT_FLOOR or DARK_FLOOR */
-	  found = FALSE;
+	  found = false;
 	  for (i = y-1; i <= y+1; i++)
 	    for (j = x-1; j <= x+1; j++)
 	      if (cave[i][j].fval <= MAX_CAVE_ROOM)
 		{
 		  c_ptr->fval = cave[i][j].fval;
 		  c_ptr->pl = cave[i][j].pl;
-		  found = TRUE;
+		  found = true;
 		  break;
 		}
 	  if (!found)
 	    {
 	      c_ptr->fval = CORR_FLOOR;
-	      c_ptr->pl = FALSE;
+	      c_ptr->pl = false;
 	    }
 	}
       else
 	{
 	  /* should become a corridor space */
 	  c_ptr->fval  = CORR_FLOOR;
-	  c_ptr->pl = FALSE;
+	  c_ptr->pl = false;
 	}
-      c_ptr->fm = FALSE;
+      c_ptr->fm = false;
       if (panel_contains(y, x))
 	if ((c_ptr->tl || c_ptr->pl) && c_ptr->tptr != 0)
 	  msg_print("You have found something!");
       lite_spot(y, x);
-      res = TRUE;
+      res = true;
     }
   return(res);
 }

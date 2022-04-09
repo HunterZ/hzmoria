@@ -22,7 +22,6 @@
 #include	<stdlib.h>
 
 #include "config.h"
-#include "types.h"
 #include "externs.h"
 
 #ifdef USG
@@ -170,8 +169,8 @@ int32 offer, asking; int final;
   else
     (void) strcpy(comment, comment2b[randint(16)-1]);
 
-  insert_lnum(comment, "%A1", offer, FALSE);
-  insert_lnum(comment, "%A2", asking, FALSE);
+  insert_lnum(comment, "%A1", offer, false);
+  insert_lnum(comment, "%A2", asking, false);
   msg_print(comment);
 }
 
@@ -186,8 +185,8 @@ int32 offer, asking; int final;
   else
     (void) strcpy (comment, comment3b[randint(15)-1]);
 
-  insert_lnum(comment, "%A1", offer, FALSE);
-  insert_lnum(comment, "%A2", asking, FALSE);
+  insert_lnum(comment, "%A1", offer, false);
+  insert_lnum(comment, "%A2", asking, false);
   msg_print(comment);
 }
 
@@ -260,7 +259,7 @@ int store_num, start;
       if ((i_ptr->subval >= ITEM_SINGLE_STACK_MIN)
 	  && (i_ptr->subval <= ITEM_SINGLE_STACK_MAX))
 	i_ptr->number = 1;
-      objdes(out_val1, i_ptr, TRUE);
+      objdes(out_val1, i_ptr, true);
       i_ptr->number = x;
       (void) sprintf(out_val2, "%c) %s", 'a'+i, out_val1);
       prt(out_val2, i+5, 0);
@@ -350,14 +349,14 @@ register int i, j;
   register int flag;
 
   *com_val = -1;
-  flag = FALSE;
+  flag = false;
   (void) sprintf(out_val, "(Items %c-%c, ESC to exit) %s", i+'a', j+'a', pmt);
   while (get_com(out_val, &command))
     {
       command -= 'a';
       if (command >= i && command <= j)
 	{
-	  flag = TRUE;
+	  flag = true;
 	  *com_val = command;
 	  break;
 	}
@@ -375,7 +374,7 @@ int store_num;
   register int increase;
   register store_type *s_ptr;
 
-  increase = FALSE;
+  increase = false;
   s_ptr = &store[store_num];
   s_ptr->insult_cur++;
   if (s_ptr->insult_cur > owners[s_ptr->owner].insult_max)
@@ -384,7 +383,7 @@ int store_num;
       s_ptr->insult_cur = 0;
       s_ptr->bad_buy++;
       s_ptr->store_open = turn + 2500 + randint(2500);
-      increase = TRUE;
+      increase = true;
     }
   return(increase);
 }
@@ -408,9 +407,9 @@ int store_num;
 {
   register int haggle;
 
-  haggle = FALSE;
+  haggle = false;
   if (increase_insults(store_num))
-    haggle = TRUE;
+    haggle = true;
   else
     {
       prt_comment5();
@@ -432,8 +431,8 @@ int num_offer;
   register char *p;
   int increment;
 
-  flag = TRUE;
-  increment = FALSE;
+  flag = true;
+  increment = false;
   clen = strlen(comment);
   orig_clen = clen;
   if (num_offer == 0)
@@ -451,11 +450,11 @@ int num_offer;
 	  clen = orig_clen + strlen (default_offer);
 	}
       if (!get_string(out_val, 0, clen, 40))
-	flag = FALSE;
+	flag = false;
       for (p = out_val; *p == ' '; p++)
 	;
       if (*p == '+' || *p == '-')
-	increment = TRUE;
+	increment = true;
       if (num_offer && increment)
 	{
 	  i = atol (out_val);
@@ -463,14 +462,14 @@ int num_offer;
 	     because a zero will not exit.  This can be zero if the user
 	     did not type a number after the +/- sign.  */
 	  if (i == 0)
-	    increment = FALSE;
+	    increment = false;
 	  else
 	    last_store_inc = i;
 	}
       else if (num_offer && *out_val == '\0')
 	{
 	  i = last_store_inc;
-	  increment = TRUE;
+	  increment = true;
 	}
       else
 	i = atol (out_val);
@@ -481,7 +480,7 @@ int num_offer;
 	{
 	  msg_print("You haven't even made your first offer yet!");
 	  i = 0;
-	  increment = FALSE;
+	  increment = false;
 	}
     }
   while (flag && (i == 0));
@@ -509,17 +508,17 @@ int num_offer, factor;
   register int receive;
 
   receive = 0;
-  flag = FALSE;
+  flag = false;
   do
     {
       if (get_haggle(comment, new_offer, num_offer))
 	{
 	  if (*new_offer*factor >= last_offer*factor)
-	    flag = TRUE;
+	    flag = true;
 	  else if (haggle_insults(store_num))
 	    {
 	      receive = 2;
-	      flag = TRUE;
+	      flag = true;
 	    }
 	  else
 	    /* new_offer rejected, reset new_offer so that incremental
@@ -529,7 +528,7 @@ int num_offer, factor;
       else
 	{
 	  receive = 1;
-	  flag = TRUE;
+	  flag = true;
 	}
     }
   while (!flag);
@@ -555,11 +554,11 @@ inven_type *item;
   register store_type *s_ptr;
   register owner_type *o_ptr;
 
-  flag = FALSE;
+  flag = false;
   purchase = 0;
   *price = 0;
   final_flag = 0;
-  didnt_haggle = FALSE;
+  didnt_haggle = false;
   s_ptr = &store[store_num];
   o_ptr = &owners[s_ptr->owner];
   cost = sell_price(store_num, &max_sell, &min_sell, item);
@@ -587,7 +586,7 @@ inven_type *item;
       msg_print("After a long bargaining session, you agree upon the price.");
       cur_ask = min_sell;
       comment = "Final offer";
-      didnt_haggle = TRUE;
+      didnt_haggle = true;
 
       /* Set up automatic increment, so that a return will accept the
 	 final price.  */
@@ -599,13 +598,13 @@ inven_type *item;
     {
       do
 	{
-	  loop_flag = TRUE;
+	  loop_flag = true;
 	  (void) sprintf(out_val, "%s :  %ld", comment, cur_ask);
 	  put_buffer(out_val, 1, 0);
 	  purchase = receive_offer(store_num, "What do you offer? ",
 				   &new_offer, last_offer, num_offer, 1);
 	  if (purchase != 0)
-	    flag = TRUE;
+	    flag = true;
 	  else
 	    {
 	      if (new_offer > cur_ask)
@@ -622,11 +621,11 @@ inven_type *item;
 		}
 	      else if (new_offer == cur_ask)
 		{
-		  flag = TRUE;
+		  flag = true;
 		  *price = new_offer;
 		}
 	      else
-		loop_flag = FALSE;
+		loop_flag = false;
 	    }
 	}
       while (!flag && loop_flag);
@@ -663,12 +662,12 @@ inven_type *item;
 		    purchase = 2;
 		  else
 		    purchase = 1;
-		  flag = TRUE;
+		  flag = true;
 		}
 	    }
 	  else if (new_offer >= cur_ask)
 	    {
-	      flag = TRUE;
+	      flag = true;
 	      *price = new_offer;
 	    }
 	  if (!flag)
@@ -716,17 +715,17 @@ inven_type *item;
   register owner_type *o_ptr;
   int sell, num_offer, final_flag, didnt_haggle;
 
-  flag = FALSE;
+  flag = false;
   sell = 0;
   *price = 0;
   final_flag = 0;
-  didnt_haggle = FALSE;
+  didnt_haggle = false;
   s_ptr = &store[store_num];
   cost = item_value(item);
   if (cost < 1)
     {
       sell = 3;
-      flag = TRUE;
+      flag = true;
     }
   else
     {
@@ -759,7 +758,7 @@ inven_type *item;
 	  final_ask = max_gold;
 	  msg_print("I am sorry, but I have not the money to afford such \
 a fine item.");
-	  didnt_haggle = TRUE;
+	  didnt_haggle = true;
 	}
       else
 	{
@@ -776,7 +775,7 @@ a fine item.");
 the price.");
               cur_ask = final_ask;
 	      comment = "Final offer";
-	      didnt_haggle = TRUE;
+	      didnt_haggle = true;
 
 	      /* Set up automatic increment, so that a return will accept the
 		 final price.  */
@@ -792,13 +791,13 @@ the price.");
 	{
 	  do
 	    {
-	      loop_flag = TRUE;
+	      loop_flag = true;
 	      (void) sprintf(out_val, "%s :  %ld", comment, cur_ask);
 	      put_buffer(out_val, 1, 0);
 	      sell = receive_offer(store_num, "What price do you ask? ",
 				 &new_offer, last_offer, num_offer, -1);
 	      if (sell != 0)
-		flag   = TRUE;
+		flag   = true;
 	      else
 		{
 		  if (new_offer < cur_ask)
@@ -815,11 +814,11 @@ the price.");
 		    }
 		  else if (new_offer == cur_ask)
 		    {
-		      flag = TRUE;
+		      flag = true;
 		      *price = new_offer;
 		    }
 		  else
-		    loop_flag = FALSE;
+		    loop_flag = false;
 		}
 	    }
 	  while (!flag && loop_flag);
@@ -856,12 +855,12 @@ the price.");
 			sell = 2;
 		      else
 			sell = 1;
-		      flag = TRUE;
+		      flag = true;
 		    }
 		}
 	      else if (new_offer <= cur_ask)
 		{
-		  flag = TRUE;
+		  flag = true;
 		  *price = new_offer;
 		}
 	      if (!flag)
@@ -904,7 +903,7 @@ int *cur_top;
   register inven_record *r_ptr;
   int item_val, item_new, purchase;
 
-  purchase = FALSE;
+  purchase = false;
   s_ptr = &store[store_num];
   /* i == number of objects shown on screen	*/
   if (*cur_top == 12)
@@ -919,7 +918,7 @@ int *cur_top;
   else if (get_store_item(&item_val,
 			  "Which item are you interested in? ", 0, i))
     {
-      item_val = item_val + *cur_top;	/* TRUE item_val	*/
+      item_val = item_val + *cur_top;	/* true item_val	*/
       take_one_item(&sell_obj, &s_ptr->store_inven[item_val].sitem);
       if (inven_check_num(&sell_obj))
 	{
@@ -939,8 +938,8 @@ int *cur_top;
 		  py.misc.au -= price;
 		  item_new = inven_carry(&sell_obj);
 		  i = s_ptr->store_ctr;
-		  store_destroy(store_num, item_val, TRUE);
-		  objdes(tmp_str, &inventory[item_new], TRUE);
+		  store_destroy(store_num, item_val, true);
+		  objdes(tmp_str, &inventory[item_new], true);
 		  (void) sprintf(out_val, "You have %s (%c)",
 				   tmp_str, item_new+'a');
 		  prt(out_val, 0, 0);
@@ -969,7 +968,7 @@ int *cur_top;
 	      else
 		{
 		  if (increase_insults(store_num))
-		    purchase = TRUE;
+		    purchase = true;
 		  else
 		    {
 		      prt_comment1();
@@ -978,7 +977,7 @@ int *cur_top;
 		}
 	    }
 	  else if (choice == 2)
-	    purchase = TRUE;
+	    purchase = true;
 
 	  /* Less intuitive, but looks better here than in purchase_haggle. */
 	  display_commands();
@@ -1003,7 +1002,7 @@ int store_num, *cur_top;
   char mask[INVEN_WIELD];
   int counter, first_item, last_item;
 
-  sell = FALSE;
+  sell = false;
   first_item = inven_ctr;
   last_item = -1;
   for (counter = 0; counter < inven_ctr; counter++)
@@ -1028,7 +1027,7 @@ int store_num, *cur_top;
 		    "I do not buy such items."))
     {
       take_one_item(&sold_obj, &inventory[item_val]);
-      objdes(tmp_str, &sold_obj, TRUE);
+      objdes(tmp_str, &sold_obj, true);
       (void) sprintf(out_val, "Selling %s (%c)", tmp_str, item_val+'a');
       msg_print(out_val);
       if (store_check_num(&sold_obj, store_num))
@@ -1046,7 +1045,7 @@ int store_num, *cur_top;
 	      /* call known2 for store item, so charges/pluses are known */
 	      known2(&sold_obj);
 	      inven_destroy(item_val);
-	      objdes(tmp_str, &sold_obj, TRUE);
+	      objdes(tmp_str, &sold_obj, true);
 	      (void) sprintf(out_val, "You've sold %s", tmp_str);
 	      msg_print(out_val);
 	      store_carry(store_num, &item_pos, &sold_obj);
@@ -1072,7 +1071,7 @@ int store_num, *cur_top;
 	      store_prt_gold();
 	    }
 	  else if (choice == 2)
-	    sell = TRUE;
+	    sell = true;
 	  else if (choice == 3)
 	    {
 	      msg_print("How dare you!");
@@ -1102,14 +1101,14 @@ int store_num;
   s_ptr = &store[store_num];
   if (s_ptr->store_open < turn)
     {
-      exit_flag = FALSE;
+      exit_flag = false;
       cur_top = 0;
       display_store(store_num, cur_top);
       do
 	{
 	  move_cursor (20, 9);
 	  /* clear the msg flag just like we do in dungeon.c */
-	  msg_flag = FALSE;
+	  msg_flag = false;
 	  if (get_com(CNIL, &command))
 	    {
 	      switch(command)
@@ -1144,7 +1143,7 @@ int store_num;
 		  /* redisplay store prices if charisma changes */
 		  if (tmp_chr != py.stats.use_stat[A_CHR])
 		    display_inventory(store_num, cur_top);
-		  free_turn_flag = FALSE;	/* No free moves here. -CJS- */
+		  free_turn_flag = false;	/* No free moves here. -CJS- */
 		  break;
 		case 'p':
 		  exit_flag = store_purchase(store_num, &cur_top);
@@ -1158,7 +1157,7 @@ int store_num;
 		}
 	    }
 	  else
-	    exit_flag = TRUE;
+	    exit_flag = true;
 	}
       while (!exit_flag);
       /* Can't save and restore the screen because inven_command does that. */

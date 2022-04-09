@@ -22,7 +22,6 @@
 #include <stdio.h>
 
 #include "config.h"
-#include "types.h"
 
 #ifdef Pyramid
 #include <sys/time.h>
@@ -332,7 +331,7 @@ umoria.");
 	      score.uid == player_uid
 #else
 	      /* Assume microcomputers should always show every entry. */
-	      TRUE
+	      true
 #endif
 	      )
 	    {
@@ -364,7 +363,7 @@ int duplicate_character ()
 {
   /* Only check for duplicate characters under unix and VMS.  */
 #if !defined (unix) && !defined(VMS)
-  return FALSE;
+  return false;
 
 #else /* ! unix && ! VMS */
 
@@ -385,7 +384,7 @@ int duplicate_character ()
       (void) sprintf (string, "Error opening score file \"%s\"\n", MORIA_TOP);
       msg_print(string);
       msg_print(CNIL);
-      return FALSE;
+      return false;
     }
 #endif
 
@@ -402,7 +401,7 @@ int duplicate_character ()
   /* Support score files from 5.2.2 to present.  */
   if (feof (highscore_fp))
     /* An empty score file.  */
-    return FALSE;
+    return false;
   if ((version_maj != CUR_VERSION_MAJ)
       || (version_min > CUR_VERSION_MIN)
       || (version_min == CUR_VERSION_MIN && patch_level > PATCH_LEVEL)
@@ -415,7 +414,7 @@ umoria.");
 #if defined(MSDOS) || defined(VMS) || defined(AMIGA) || defined(MAC) || defined(APOLLO)
       (void) fclose (highscore_fp);
 #endif
-      return FALSE;
+      return false;
     }
 
   /* set the static fileptr in save.c to the highscore file pointer */
@@ -438,7 +437,7 @@ umoria.");
 	  && score.class == py.misc.pclass && score.race == py.misc.prace
 	  && score.sex == (py.misc.male ? 'M' : 'F')
 	  && strcmp (score.died_from, "(saved)"))
-	return TRUE;
+	return true;
 
       rd_highscore(&score);
     }
@@ -446,7 +445,7 @@ umoria.");
   (void) fclose (highscore_fp);
 #endif
 
-  return FALSE;
+  return false;
 #endif  /* ! unix && ! VMS */
 }
 
@@ -536,19 +535,19 @@ static void print_tomb()
 	{
 	case 'f': case 'F':
 	  func = 'F';
-	  ok = TRUE;
+	  ok = true;
 	  break;
 	case 'y': case 'Y':
 	  func = 'Y';
-	  ok = TRUE;
+	  ok = true;
 	  break;
 	case 'n': case 'N':
 	  func = 'N';
-	  ok = TRUE;
+	  ok = true;
 	  break;
 	default:
 	  bell();
-	  ok = FALSE;
+	  ok = false;
 	  break;
 	}
     }
@@ -589,11 +588,11 @@ static void print_tomb()
 	    {
 	      clear_screen ();
 	      msg_print ("You are using:");
-	      (void) show_equip (TRUE, 0);
+	      (void) show_equip (true, 0);
 	      msg_print (CNIL);
 	      msg_print ("You are carrying:");
 	      clear_from (1);
-	      (void) show_inven (0, inven_ctr-1, TRUE, 0, CNIL);
+	      (void) show_inven (0, inven_ctr-1, true, 0, CNIL);
 	      msg_print (CNIL);
 	    }
 	}
@@ -638,7 +637,7 @@ static void highscores()
   if (noscore)
     return;
 
-  if (panic_save == 1)
+  if (panic_save)
     {
       msg_print("Sorry, scores for games restored from panic save files \
 are not saved.");
@@ -929,7 +928,7 @@ void exit_game ()
 {
 #ifdef MAC
   /* Prevent strange things from happening */
-  enablefilemenu(FALSE);
+  enablefilemenu(false);
 #endif
 
   /* What happens upon dying.				-RAK-	 */
@@ -946,7 +945,7 @@ void exit_game ()
     }
   if (character_generated && !character_saved)
 #ifdef MAC
-    (void) save_char (TRUE);		/* Save the memory at least. */
+    (void) save_char (true);		/* Save the memory at least. */
 #else
     (void) save_char ();		/* Save the memory at least. */
 #endif
@@ -956,15 +955,15 @@ void exit_game ()
       /* Clear character_saved, strange thing to do, but it prevents inkey()
 	 from recursively calling exit_game() when there has been an eof
 	 on stdin detected.  */
-      character_saved = FALSE;
+      character_saved = false;
       highscores();
-      display_scores (TRUE);
+      display_scores (true);
     }
   erase_line (23, 0);
   restore_term ();
 #ifdef MAC
   /* Undo what has been done */
-  enablefilemenu(TRUE);
+  enablefilemenu(true);
   /* Long jump back into the Mac wrapper, in lieu of exit () */
   goback();
 #else

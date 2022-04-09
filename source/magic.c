@@ -19,9 +19,7 @@
    along with Umoria.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "config.h"
-#include "types.h"
 #include "externs.h"
-
 
 /* Throw a magic spell					-RAK-	*/
 void cast()
@@ -36,7 +34,7 @@ void cast()
   int32u holder;
 #endif
 
-  free_turn_flag = TRUE;
+  free_turn_flag = true;
   if (py.flags.blind > 0)
     msg_print("You can't see to read your spell book!");
   else if (no_light())
@@ -55,7 +53,7 @@ void cast()
       else if (result > 0)
 	{
 	  m_ptr = &magic_spell[py.misc.pclass-1][choice];
-	  free_turn_flag = FALSE;
+	  free_turn_flag = false;
 
 	  if (randint(100) < chance)
 	    msg_print("You failed to get the spell off!");

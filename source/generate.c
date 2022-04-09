@@ -19,7 +19,6 @@
    along with Umoria.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "config.h"
-#include "types.h"
 #include "externs.h"
 
 #if defined(USG) && !defined(VMS) && !defined(MAC)
@@ -418,7 +417,7 @@ int typ, num, walls;
 
   for (i = 0; i < num; i++)
     {
-      flag = FALSE;
+      flag = false;
       do
 	{
 	  j = 0;
@@ -440,7 +439,7 @@ int typ, num, walls;
 			  && (cave_ptr->tptr == 0)
 			  && (next_to_walls(y1, x1) >= walls))
 			{
-			  flag = TRUE;
+			  flag = true;
 			  if (typ == 1)
 			    place_up_stairs(y1, x1);
 			  else
@@ -473,7 +472,7 @@ int y, x, yd, xd, num;
 
   for (i = 0; i < num; i++)
     {
-      flag = FALSE;
+      flag = false;
       count = 0;
       do
 	{
@@ -484,7 +483,7 @@ int y, x, yd, xd, num;
 	      && (c_ptr->tptr == 0))
 	    {
 	      place_trap(y1, x1, randint(MAX_TRAP)-1);
-	      flag = TRUE;
+	      flag = true;
 	    }
 	  count++;
 	}
@@ -504,7 +503,7 @@ int y, x, num;
     {
       y1 = y;
       x1 = x;
-      (void) summon_monster(&y1, &x1, TRUE);
+      (void) summon_monster(&y1, &x1, true);
     }
 }
 
@@ -537,7 +536,7 @@ int yval, xval;
       for (j = x_left; j <= x_right; j++)
 	{
 	  c_ptr->fval  = floor;
-	  c_ptr->lr = TRUE;
+	  c_ptr->lr = true;
 	  c_ptr++;
 	}
     }
@@ -546,10 +545,10 @@ int yval, xval;
     {
       c_ptr = &cave[i][x_left-1];
       c_ptr->fval   = GRANITE_WALL;
-      c_ptr->lr = TRUE;
+      c_ptr->lr = true;
       c_ptr = &cave[i][x_right+1];
       c_ptr->fval  = GRANITE_WALL;
-      c_ptr->lr = TRUE;
+      c_ptr->lr = true;
     }
 
   c_ptr = &cave[y_height - 1][x_left];
@@ -557,10 +556,10 @@ int yval, xval;
   for (i = x_left; i <= x_right; i++)
     {
       c_ptr->fval  = GRANITE_WALL;
-      c_ptr->lr = TRUE;
+      c_ptr->lr = true;
       c_ptr++;
       d_ptr->fval   = GRANITE_WALL;
-      d_ptr->lr = TRUE;
+      d_ptr->lr = true;
       d_ptr++;
     }
 }
@@ -598,7 +597,7 @@ int yval, xval;
 	  for (j = x_left; j <= x_right; j++)
 	    {
 	      c_ptr->fval  = floor;
-	      c_ptr->lr = TRUE;
+	      c_ptr->lr = true;
 	      c_ptr++;
 	    }
 	}
@@ -608,13 +607,13 @@ int yval, xval;
 	  if (c_ptr->fval != floor)
 	    {
 	      c_ptr->fval  = GRANITE_WALL;
-	      c_ptr->lr = TRUE;
+	      c_ptr->lr = true;
 	    }
 	  c_ptr = &cave[i][x_right+1];
 	  if (c_ptr->fval != floor)
 	    {
 	      c_ptr->fval  = GRANITE_WALL;
-	      c_ptr->lr = TRUE;
+	      c_ptr->lr = true;
 	    }
 	}
       c_ptr = &cave[y_height - 1][x_left];
@@ -624,13 +623,13 @@ int yval, xval;
 	  if (c_ptr->fval != floor)
 	    {
 	      c_ptr->fval  = GRANITE_WALL;
-	      c_ptr->lr = TRUE;
+	      c_ptr->lr = true;
 	    }
 	  c_ptr++;
 	  if (d_ptr->fval != floor)
 	    {
 	      d_ptr->fval  = GRANITE_WALL;
-	      d_ptr->lr = TRUE;
+	      d_ptr->lr = true;
 	    }
 	  d_ptr++;
 	}
@@ -671,7 +670,7 @@ int yval, xval;
       for (j = x_left; j <= x_right; j++)
 	{
 	  c_ptr->fval  = floor;
-	  c_ptr->lr = TRUE;
+	  c_ptr->lr = true;
 	  c_ptr++;
 	}
     }
@@ -679,20 +678,20 @@ int yval, xval;
     {
       c_ptr = &cave[i][x_left-1];
       c_ptr->fval   = GRANITE_WALL;
-      c_ptr->lr = TRUE;
+      c_ptr->lr = true;
       c_ptr = &cave[i][x_right+1];
       c_ptr->fval  = GRANITE_WALL;
-      c_ptr->lr = TRUE;
+      c_ptr->lr = true;
     }
   c_ptr = &cave[y_height - 1][x_left];
   d_ptr = &cave[y_depth + 1][x_left];
   for (i = x_left; i <= x_right; i++)
     {
       c_ptr->fval  = GRANITE_WALL;
-      c_ptr->lr = TRUE;
+      c_ptr->lr = true;
       c_ptr++;
       d_ptr->fval   = GRANITE_WALL;
-      d_ptr->lr = TRUE;
+      d_ptr->lr = true;
       d_ptr++;
     }
   /* The inner room		*/
@@ -756,7 +755,7 @@ int yval, xval;
       /* Place an object in the treasure vault	*/
       tmp = randint(10);
       if (tmp > 2)
-	place_object(yval, xval, FALSE);
+	place_object(yval, xval, false);
       else if (tmp == 2)
 	place_down_stairs(yval, xval);
       else
@@ -825,8 +824,8 @@ int yval, xval;
 	  cave[yval][xval+5].fval = TMP1_WALL;
 	  place_secret_door(yval-3+(randint(2)<<1), xval-3);
 	  place_secret_door(yval-3+(randint(2)<<1), xval+3);
-	  if (randint(3) == 1)	place_object(yval, xval-2, FALSE);
-	  if (randint(3) == 1)	place_object(yval, xval+2, FALSE);
+	  if (randint(3) == 1)	place_object(yval, xval-2, false);
+	  if (randint(3) == 1)	place_object(yval, xval+2, false);
 	  vault_monster(yval, xval-2, randint(2));
 	  vault_monster(yval, xval+2, randint(2));
 	}
@@ -923,25 +922,25 @@ int yval, xval;
       {
 	c_ptr = &cave[i][j];
 	c_ptr->fval = floor;
-	c_ptr->lr = TRUE;
+	c_ptr->lr = true;
       }
   for (i = (y_height - 1); i <= (y_depth + 1); i++)
     {
       c_ptr = &cave[i][x_left-1];
       c_ptr->fval  = GRANITE_WALL;
-      c_ptr->lr = TRUE;
+      c_ptr->lr = true;
       c_ptr = &cave[i][x_right+1];
       c_ptr->fval  = GRANITE_WALL;
-      c_ptr->lr = TRUE;
+      c_ptr->lr = true;
     }
   for (i = x_left; i <= x_right; i++)
     {
       c_ptr = &cave[y_height-1][i];
       c_ptr->fval  = GRANITE_WALL;
-      c_ptr->lr = TRUE;
+      c_ptr->lr = true;
       c_ptr = &cave[y_depth+1][i];
       c_ptr->fval  = GRANITE_WALL;
-      c_ptr->lr = TRUE;
+      c_ptr->lr = true;
     }
   tmp = 2 + randint(9);
   y_height = yval - 1;
@@ -953,7 +952,7 @@ int yval, xval;
       {
 	c_ptr = &cave[i][j];
 	c_ptr->fval = floor;
-	c_ptr->lr = TRUE;
+	c_ptr->lr = true;
       }
   for (i = (y_height - 1); i <= (y_depth + 1); i++)
     {
@@ -961,13 +960,13 @@ int yval, xval;
       if (c_ptr->fval != floor)
 	{
 	  c_ptr->fval  = GRANITE_WALL;
-	  c_ptr->lr = TRUE;
+	  c_ptr->lr = true;
 	}
       c_ptr = &cave[i][x_right+1];
       if (c_ptr->fval != floor)
 	{
 	  c_ptr->fval  = GRANITE_WALL;
-	  c_ptr->lr = TRUE;
+	  c_ptr->lr = true;
 	}
     }
   for (i = x_left; i <= x_right; i++)
@@ -976,13 +975,13 @@ int yval, xval;
       if (c_ptr->fval != floor)
 	{
 	  c_ptr->fval  = GRANITE_WALL;
-	  c_ptr->lr = TRUE;
+	  c_ptr->lr = true;
 	}
       c_ptr = &cave[y_depth+1][i];
       if (c_ptr->fval != floor)
 	{
 	  c_ptr->fval  = GRANITE_WALL;
-	  c_ptr->lr = TRUE;
+	  c_ptr->lr = true;
 	}
     }
   /* Special features.			*/
@@ -1016,7 +1015,7 @@ int yval, xval;
 	place_secret_door(yval, xval-7+(tmp<<1));
 
       /* Place a treasure in the vault		*/
-      place_object(yval, xval, FALSE);
+      place_object(yval, xval, false);
       /* Let's guard the treasure well.	*/
       vault_monster(yval, xval, 2+randint(2));
       /* Traps naturally			*/
@@ -1075,8 +1074,8 @@ int row1, col1, row2, col2;
 
   /* Main procedure for Tunnel			*/
   /* Note: 9 is a temporary value		*/
-  stop_flag = FALSE;
-  door_flag = FALSE;
+  stop_flag = false;
+  door_flag = false;
   tunindex    = 0;
   wallindex   = 0;
   main_loop_count = 0;
@@ -1089,7 +1088,7 @@ int row1, col1, row2, col2;
       /* prevent infinite loops, just in case */
       main_loop_count++;
       if (main_loop_count > 2000)
-	stop_flag = TRUE;
+	stop_flag = true;
 
       if (randint(100) > DUN_TUN_CHG)
 	{
@@ -1120,7 +1119,7 @@ int row1, col1, row2, col2;
 	      tunstk[tunindex].x = col1;
 	      tunindex++;
 	    }
-	  door_flag = FALSE;
+	  door_flag = false;
 	}
       else if (c_ptr->fval == TMP2_WALL)
 	/* do nothing */
@@ -1158,7 +1157,7 @@ int row1, col1, row2, col2;
 		  doorstk[doorindex].x = col1;
 		  doorindex++;
 		}
-	      door_flag = TRUE;
+	      door_flag = true;
 	    }
 	  if (randint(100) > DUN_TUN_CON)
 	    {
@@ -1169,7 +1168,7 @@ int row1, col1, row2, col2;
 	      tmp_col = col1 - start_col;
 	      if (tmp_col < 0) tmp_col = -tmp_col;
 	      if (tmp_row > 10 || tmp_col > 10)
-		stop_flag = TRUE;
+		stop_flag = true;
 	    }
 	}
       else  /* c_ptr->fval != NULL, TMP2, GRANITE, CORR */
@@ -1212,14 +1211,14 @@ register int y, x;
   if (next_to_corr(y, x) > 2)
     if ((cave[y-1][x].fval >= MIN_CAVE_WALL)
 	&& (cave[y+1][x].fval >= MIN_CAVE_WALL))
-      next = TRUE;
+      next = true;
     else if ((cave[y][x-1].fval >= MIN_CAVE_WALL)
 	     && (cave[y][x+1].fval >= MIN_CAVE_WALL))
-      next = TRUE;
+      next = true;
     else
-      next = FALSE;
+      next = false;
   else
-    next = FALSE;
+    next = false;
   return(next);
 }
 
@@ -1271,14 +1270,14 @@ static void cave_gen()
   col_rooms = 2*(cur_width /SCREEN_WIDTH);
   for (i = 0; i < row_rooms; i++)
     for (j = 0; j < col_rooms; j++)
-      room_map[i][j] = FALSE;
+      room_map[i][j] = false;
   k = randnor(DUN_ROO_MEA, 2);
   for (i = 0; i < k; i++)
-    room_map[randint(row_rooms)-1][randint(col_rooms)-1] = TRUE;
+    room_map[randint(row_rooms)-1][randint(col_rooms)-1] = true;
   k = 0;
   for (i = 0; i < row_rooms; i++)
     for (j = 0; j < col_rooms; j++)
-      if (room_map[i][j] == TRUE)
+      if (room_map[i][j] == true)
 	{
 	  yloc[k] = i * (SCREEN_HEIGHT >> 1) + QUART_HEIGHT;
 	  xloc[k] = j * (SCREEN_WIDTH >> 1) + QUART_WIDTH;
@@ -1348,7 +1347,7 @@ static void cave_gen()
   place_stairs(1, randint(2), 3);
   /* Set up the character co-ords, used by alloc_monster, place_win_monster */
   new_spot(&char_row, &char_col);
-  alloc_monster((randint(8)+MIN_MALLOC_LEVEL+alloc_level), 0, TRUE);
+  alloc_monster((randint(8)+MIN_MALLOC_LEVEL+alloc_level), 0, true);
   alloc_object(set_corr, 3, randint(alloc_level));
   alloc_object(set_room, 5, randnor(TREAS_ROOM_ALLOC, 3));
   alloc_object(set_floor, 5, randnor(TREAS_ANY_ALLOC, 3));
@@ -1455,14 +1454,14 @@ static void town_gen()
 	  for (j = 0; j < cur_width; j++)
 	    {
 	      if (c_ptr->fval != DARK_FLOOR)
-		c_ptr->pl = TRUE;
+		c_ptr->pl = true;
 	      c_ptr++;
 	    }
 #ifdef MAC
 	  SystemTask ();
 #endif
 	}
-      alloc_monster(MIN_MALLOC_TN, 3, TRUE);
+      alloc_monster(MIN_MALLOC_TN, 3, true);
     }
   else
     {		/* Day	*/
@@ -1471,14 +1470,14 @@ static void town_gen()
 	  c_ptr = &cave[i][0];
 	  for (j = 0; j < cur_width; j++)
 	    {
-	      c_ptr->pl = TRUE;
+	      c_ptr->pl = true;
 	      c_ptr++;
 	    }
 #ifdef MAC
 	  SystemTask ();
 #endif
 	}
-      alloc_monster(MIN_MALLOC_TD, 3, TRUE);
+      alloc_monster(MIN_MALLOC_TD, 3, true);
     }
   store_maint();
 }
