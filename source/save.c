@@ -21,13 +21,6 @@
 #include "config.h"
 #include "types.h"
 
-/* For debugging the savefile code on systems with broken compilers.  */
-#if 0
-#define DEBUG(x)  x
-#else
-#define DEBUG(x)
-#endif
-
 #ifdef _MSC_VER
   #include  <io.h>
 #endif
@@ -42,25 +35,27 @@
    `topen' declaration.  */
 #include "externs.h"
 
-DEBUG(static FILE *logfile);
-
-static int sv_write();
-static void wr_byte();
-static void wr_short();
-static void wr_long();
-static void wr_bytes();
-static void wr_string();
-static void wr_shorts();
-static void wr_item();
-static void wr_monster();
-static void rd_byte();
-static void rd_short();
-static void rd_long();
-static void rd_bytes();
-static void rd_string();
-static void rd_shorts();
-static void rd_item();
-static void rd_monster();
+static int    sv_write();
+static bool   ver_lt(const int8u, const int8u, const int8u,
+                     const int8u, const int8u, const int8u);
+static bool   ver_ge(const int8u, const int8u, const int8u,
+                     const int8u, const int8u, const int8u);
+static void   wr_byte(const int8u);
+static void   wr_short(const int16u);
+static void   wr_long(const int32u);
+static void   wr_bytes(int8u const *const, const int);
+static void   wr_string(char const *const);
+static void   wr_shorts(int16u const *const, const int);
+static void   wr_item(inven_type const *const);
+static void   wr_monster(monster_type const *const);
+static int8u  rd_byte();
+static int16u rd_short();
+static int32u rd_long();
+static void   rd_bytes(int8u *const, const int);
+static void   rd_string(char *const);
+static void   rd_shorts(int16u *const, const int);
+static void   rd_item(inven_type *const);
+static void   rd_monster(monster_type *const);
 
 /* these are used for the save file, to avoid having to pass them to every
    procedure */
@@ -437,8 +432,6 @@ int _save_char(char *fnam)
     fileptr = fopen(savefile, "wb+");
   }
 
-  DEBUG(logfile = fopen("IO_LOG", "a"));
-  DEBUG(fprintf (logfile, "Saving data to %s\n", savefile));
   if (fileptr != NULL)
   {
     file_created = true;
@@ -455,7 +448,6 @@ int _save_char(char *fnam)
     /* Note that xor_byte is now equal to char_tmp */
 
     ok = sv_write();
-    DEBUG(fclose (logfile));
     if (fclose(fileptr) == EOF) ok = false;
   }
 
@@ -558,17 +550,14 @@ int get_char(int *generate)
     prt("Restoring Memory...", 0, 0);
     put_qio();
 
-    DEBUG(logfile = fopen("IO_LOG", "a"));
-    DEBUG(fprintf(logfile, "Reading data from %s\n", savefile));
-
     xor_byte = 0;
-    rd_byte(&version_maj);
+    version_maj = rd_byte();
     xor_byte = 0;
-    rd_byte(&version_min);
+    version_min = rd_byte();
     xor_byte = 0;
-    rd_byte(&patch_level);
+    patch_level = rd_byte();
     xor_byte = 0;
-    rd_byte(&xor_byte);
+    xor_byte = rd_byte();
 
     /* COMPAT support savefiles from 5.0.14 to 5.0.17 */
     /* support savefiles from 5.1.0 to present */
@@ -579,28 +568,28 @@ int get_char(int *generate)
       goto error;
     }
 
-    rd_short(&int16u_tmp);
+    int16u_tmp = rd_short();
     while (int16u_tmp != 0xFFFF)
     {
       if (int16u_tmp >= MAX_CREATURES) goto error;
       r_ptr = &c_recall[int16u_tmp];
-      rd_long(&r_ptr->r_cmove);
-      rd_long(&r_ptr->r_spells);
-      rd_short(&r_ptr->r_kills);
-      rd_short(&r_ptr->r_deaths);
-      rd_short(&r_ptr->r_cdefense);
-      rd_byte(&r_ptr->r_wake);
-      rd_byte(&r_ptr->r_ignore);
+      r_ptr->r_cmove    = rd_long();
+      r_ptr->r_spells   = rd_long();
+      r_ptr->r_kills    = rd_short();
+      r_ptr->r_deaths   = rd_short();
+      r_ptr->r_cdefense = rd_short();
+      r_ptr->r_wake     = rd_byte();
+      r_ptr->r_ignore   = rd_byte();
       rd_bytes(r_ptr->r_attacks, MAX_MON_NATTACK);
-      rd_short(&int16u_tmp);
+      int16u_tmp        = rd_short();
     }
 
     /* for save files before 5.2.2, read and ignore log_index (sic) */
     if (ver_lt(version_maj, version_min, patch_level, 5, 2, 2))
     {
-      rd_short(&int16u_tmp);
+      int16u_tmp = rd_short();
     }
-    rd_long(&int32u_tmp);
+    int32u_tmp = rd_long();
 
     find_cut            = !!(int32u_tmp & SV_FIND_CUT);
     find_examine        = !!(int32u_tmp & SV_FIND_EXAMINE);
@@ -643,42 +632,42 @@ int get_char(int *generate)
     {
       m_ptr = &py.misc;
       rd_string(m_ptr->name);
-      rd_byte(&m_ptr->male);
-      rd_long((int32u *)&m_ptr->au);
-      rd_long((int32u *)&m_ptr->max_exp);
-      rd_long((int32u *)&m_ptr->exp);
-      rd_short(&m_ptr->exp_frac);
-      rd_short(&m_ptr->age);
-      rd_short(&m_ptr->ht);
-      rd_short(&m_ptr->wt);
-      rd_short(&m_ptr->lev);
-      rd_short(&m_ptr->max_dlv);
-      rd_short((int16u *)&m_ptr->srh);
-      rd_short((int16u *)&m_ptr->fos);
-      rd_short((int16u *)&m_ptr->bth);
-      rd_short((int16u *)&m_ptr->bthb);
-      rd_short((int16u *)&m_ptr->mana);
-      rd_short((int16u *)&m_ptr->mhp);
-      rd_short((int16u *)&m_ptr->ptohit);
-      rd_short((int16u *)&m_ptr->ptodam);
-      rd_short((int16u *)&m_ptr->pac);
-      rd_short((int16u *)&m_ptr->ptoac);
-      rd_short((int16u *)&m_ptr->dis_th);
-      rd_short((int16u *)&m_ptr->dis_td);
-      rd_short((int16u *)&m_ptr->dis_ac);
-      rd_short((int16u *)&m_ptr->dis_tac);
-      rd_short((int16u *)&m_ptr->disarm);
-      rd_short((int16u *)&m_ptr->save);
-      rd_short((int16u *)&m_ptr->sc);
-      rd_short((int16u *)&m_ptr->stl);
-      rd_byte(&m_ptr->pclass);
-      rd_byte(&m_ptr->prace);
-      rd_byte(&m_ptr->hitdie);
-      rd_byte(&m_ptr->expfact);
-      rd_short((int16u *)&m_ptr->cmana);
-      rd_short(&m_ptr->cmana_frac);
-      rd_short((int16u *)&m_ptr->chp);
-      rd_short(&m_ptr->chp_frac);
+      m_ptr->male       = rd_byte();
+      m_ptr->au         = (int32)rd_long();
+      m_ptr->max_exp    = (int32)rd_long();
+      m_ptr->exp        = (int32)rd_long();
+      m_ptr->exp_frac   = rd_short();
+      m_ptr->age        = rd_short();
+      m_ptr->ht         = rd_short();
+      m_ptr->wt         = rd_short();
+      m_ptr->lev        = rd_short();
+      m_ptr->max_dlv    = rd_short();
+      m_ptr->srh        = (int16)rd_short();
+      m_ptr->fos        = (int16)rd_short();
+      m_ptr->bth        = (int16)rd_short();
+      m_ptr->bthb       = (int16)rd_short();
+      m_ptr->mana       = (int16)rd_short();
+      m_ptr->mhp        = (int16)rd_short();
+      m_ptr->ptohit     = (int16)rd_short();
+      m_ptr->ptodam     = (int16)rd_short();
+      m_ptr->pac        = (int16)rd_short();
+      m_ptr->ptoac      = (int16)rd_short();
+      m_ptr->dis_th     = (int16)rd_short();
+      m_ptr->dis_td     = (int16)rd_short();
+      m_ptr->dis_ac     = (int16)rd_short();
+      m_ptr->dis_tac    = (int16)rd_short();
+      m_ptr->disarm     = (int16)rd_short();
+      m_ptr->save       = (int16)rd_short();
+      m_ptr->sc         = (int16)rd_short();
+      m_ptr->stl        = (int16)rd_short();
+      m_ptr->pclass     = rd_byte();
+      m_ptr->prace      = rd_byte();
+      m_ptr->hitdie     = rd_byte();
+      m_ptr->expfact    = rd_byte();
+      m_ptr->cmana      = (int16)rd_short();
+      m_ptr->cmana_frac = rd_short();
+      m_ptr->chp        = (int16)rd_short();
+      m_ptr->chp_frac   = rd_short();
       for (i = 0; i < 4; i++) rd_string(m_ptr->history[i]);
 
       s_ptr = &py.stats;
@@ -688,74 +677,74 @@ int get_char(int *generate)
       rd_bytes(s_ptr->use_stat, 6);
 
       f_ptr = &py.flags;
-      rd_long(&f_ptr->status);
-      rd_short((int16u *)&f_ptr->rest);
-      rd_short((int16u *)&f_ptr->blind);
-      rd_short((int16u *)&f_ptr->paralysis);
-      rd_short((int16u *)&f_ptr->confused);
-      rd_short((int16u *)&f_ptr->food);
-      rd_short((int16u *)&f_ptr->food_digested);
-      rd_short((int16u *)&f_ptr->protection);
-      rd_short((int16u *)&f_ptr->speed);
-      rd_short((int16u *)&f_ptr->fast);
-      rd_short((int16u *)&f_ptr->slow);
-      rd_short((int16u *)&f_ptr->afraid);
-      rd_short((int16u *)&f_ptr->poisoned);
-      rd_short((int16u *)&f_ptr->image);
-      rd_short((int16u *)&f_ptr->protevil);
-      rd_short((int16u *)&f_ptr->invuln);
-      rd_short((int16u *)&f_ptr->hero);
-      rd_short((int16u *)&f_ptr->shero);
-      rd_short((int16u *)&f_ptr->blessed);
-      rd_short((int16u *)&f_ptr->resist_heat);
-      rd_short((int16u *)&f_ptr->resist_cold);
-      rd_short((int16u *)&f_ptr->detect_inv);
-      rd_short((int16u *)&f_ptr->word_recall);
-      rd_short((int16u *)&f_ptr->see_infra);
-      rd_short((int16u *)&f_ptr->tim_infra);
-      rd_byte(&f_ptr->see_inv);
-      rd_byte(&f_ptr->teleport);
-      rd_byte(&f_ptr->free_act);
-      rd_byte(&f_ptr->slow_digest);
-      rd_byte(&f_ptr->aggravate);
-      rd_byte(&f_ptr->fire_resist);
-      rd_byte(&f_ptr->cold_resist);
-      rd_byte(&f_ptr->acid_resist);
-      rd_byte(&f_ptr->regenerate);
-      rd_byte(&f_ptr->lght_resist);
-      rd_byte(&f_ptr->ffall);
-      rd_byte(&f_ptr->sustain_str);
-      rd_byte(&f_ptr->sustain_int);
-      rd_byte(&f_ptr->sustain_wis);
-      rd_byte(&f_ptr->sustain_con);
-      rd_byte(&f_ptr->sustain_dex);
-      rd_byte(&f_ptr->sustain_chr);
-      rd_byte(&f_ptr->confuse_monster);
-      rd_byte(&f_ptr->new_spells);
+      f_ptr->status          = rd_long();
+      f_ptr->rest            = (int16)rd_short();
+      f_ptr->blind           = (int16)rd_short();
+      f_ptr->paralysis       = (int16)rd_short();
+      f_ptr->confused        = (int16)rd_short();
+      f_ptr->food            = (int16)rd_short();
+      f_ptr->food_digested   = (int16)rd_short();
+      f_ptr->protection      = (int16)rd_short();
+      f_ptr->speed           = (int16)rd_short();
+      f_ptr->fast            = (int16)rd_short();
+      f_ptr->slow            = (int16)rd_short();
+      f_ptr->afraid          = (int16)rd_short();
+      f_ptr->poisoned        = (int16)rd_short();
+      f_ptr->image           = (int16)rd_short();
+      f_ptr->protevil        = (int16)rd_short();
+      f_ptr->invuln          = (int16)rd_short();
+      f_ptr->hero            = (int16)rd_short();
+      f_ptr->shero           = (int16)rd_short();
+      f_ptr->blessed         = (int16)rd_short();
+      f_ptr->resist_heat     = (int16)rd_short();
+      f_ptr->resist_cold     = (int16)rd_short();
+      f_ptr->detect_inv      = (int16)rd_short();
+      f_ptr->word_recall     = (int16)rd_short();
+      f_ptr->see_infra       = (int16)rd_short();
+      f_ptr->tim_infra       = (int16)rd_short();
+      f_ptr->see_inv         = rd_byte();
+      f_ptr->teleport        = rd_byte();
+      f_ptr->free_act        = rd_byte();
+      f_ptr->slow_digest     = rd_byte();
+      f_ptr->aggravate       = rd_byte();
+      f_ptr->fire_resist     = rd_byte();
+      f_ptr->cold_resist     = rd_byte();
+      f_ptr->acid_resist     = rd_byte();
+      f_ptr->regenerate      = rd_byte();
+      f_ptr->lght_resist     = rd_byte();
+      f_ptr->ffall           = rd_byte();
+      f_ptr->sustain_str     = rd_byte();
+      f_ptr->sustain_int     = rd_byte();
+      f_ptr->sustain_wis     = rd_byte();
+      f_ptr->sustain_con     = rd_byte();
+      f_ptr->sustain_dex     = rd_byte();
+      f_ptr->sustain_chr     = rd_byte();
+      f_ptr->confuse_monster = rd_byte();
+      f_ptr->new_spells      = rd_byte();
 
-      rd_short((int16u *)&missile_ctr);
-      rd_long((int32u *)&turn);
-      rd_short((int16u *)&inven_ctr);
+      missile_ctr     = (int16)rd_short();
+      turn            = (int32)rd_long();
+      inven_ctr       = (int16)rd_short();
       if (inven_ctr > INVEN_WIELD) goto error;
       for (i = 0; i < inven_ctr; i++) rd_item(&inventory[i]);
       for (i = INVEN_WIELD; i < INVEN_ARRAY_SIZE; i++)
         rd_item(&inventory[i]);
-      rd_short((int16u *)&inven_weight);
-      rd_short((int16u *)&equip_ctr);
-      rd_long(&spell_learned);
-      rd_long(&spell_worked);
-      rd_long(&spell_forgotten);
+      inven_weight    = (int16)rd_short();
+      equip_ctr       = (int16)rd_short();
+      spell_learned   = rd_long();
+      spell_worked    = rd_long();
+      spell_forgotten = rd_long();
       rd_bytes(spell_order, 32);
       rd_bytes(object_ident, OBJECT_IDENT_SIZE);
-      rd_long(&randes_seed);
-      rd_long(&town_seed);
-      rd_short((int16u *)&last_msg);
+      randes_seed     = rd_long();
+      town_seed       = rd_long();
+      last_msg        = (int16)rd_short();
       for (i = 0; i < MAX_SAVE_MSG; i++) rd_string(old_msg[i]);
 
-      rd_short((int16u *)&int16u_tmp);
-      panic_save = !!int16u_tmp;
-      rd_short((int16u *)&total_winner);
-      rd_short((int16u *)&noscore);
+      int16u_tmp   = rd_short();
+      panic_save   = !!int16u_tmp;
+      total_winner = (int16)rd_short();
+      noscore      = (int16)rd_short();
       rd_shorts(player_hp, MAX_PLAYER_LEVEL);
 
       if (ver_ge(version_maj, version_min, patch_level, 5, 1, 3))
@@ -763,16 +752,16 @@ int get_char(int *generate)
         for (i = 0; i < MAX_STORES; i++)
         {
           st_ptr = &store[i];
-          rd_long((int32u *)&st_ptr->store_open);
-          rd_short((int16u *)&st_ptr->insult_cur);
-          rd_byte(&st_ptr->owner);
-          rd_byte(&st_ptr->store_ctr);
-          rd_short(&st_ptr->good_buy);
-          rd_short(&st_ptr->bad_buy);
+          st_ptr->store_open = (int32)rd_long();
+          st_ptr->insult_cur = (int16)rd_short();
+          st_ptr->owner      = rd_byte();
+          st_ptr->store_ctr  = rd_byte();
+          st_ptr->good_buy   = rd_short();
+          st_ptr->bad_buy    = rd_short();
           if (st_ptr->store_ctr > STORE_INVEN_MAX) goto error;
           for (j = 0; j < st_ptr->store_ctr; j++)
           {
-            rd_long((int32u *)&st_ptr->store_inven[j].scost);
+            st_ptr->store_inven[j].scost = (int32)rd_long();
             rd_item(&st_ptr->store_inven[j].sitem);
           }
         }
@@ -780,20 +769,18 @@ int get_char(int *generate)
 
       /* read the time that the file was saved */
       if (ver_ge(version_maj, version_min, patch_level, 5, 1, 3))
-        rd_long(&time_saved);
+        time_saved = rd_long();
 
       if (ver_ge(version_maj, version_min, patch_level, 5, 2, 0))
         rd_string(died_from);
 
       max_score = 0;
       if (ver_ge(version_maj, version_min, patch_level, 5, 2, 2))
-      {
-        rd_long ((int32u *)&max_score);
-      }
+        max_score = (int32)rd_long();
 
-      birth_date = time((time_t *)0);
+      birth_date = time(NULL);
       if (ver_ge(version_maj, version_min, patch_level, 5, 2, 2))
-        rd_long ((int32u *)&birth_date);
+        birth_date = (int32)rd_long();
     } /* end if not dead */
 
     /* if end of file or dead */
@@ -838,36 +825,32 @@ int get_char(int *generate)
     /* only level specific info should follow, not present for dead
         characters */
 
-    rd_short((int16u *)&dun_level);
-    rd_short((int16u *)&char_row);
-    rd_short((int16u *)&char_col);
-    rd_short((int16u *)&mon_tot_mult);
-    rd_short((int16u *)&cur_height);
-    rd_short((int16u *)&cur_width);
-    rd_short((int16u *)&max_panel_rows);
-    rd_short((int16u *)&max_panel_cols);
+    dun_level      = (int16)rd_short();
+    char_row       = (int16)rd_short();
+    char_col       = (int16)rd_short();
+    mon_tot_mult   = (int16)rd_short();
+    cur_height     = (int16)rd_short();
+    cur_width      = (int16)rd_short();
+    max_panel_rows = (int16)rd_short();
+    max_panel_cols = (int16)rd_short();
 
     /* read in the creature ptr info */
-    rd_byte(&char_tmp);
-    while (char_tmp != 0xFF)
+    for (char_tmp = rd_byte(); char_tmp != 0xFF; char_tmp = rd_byte())
     {
-      ychar = char_tmp;
-      rd_byte(&xchar);
-      rd_byte(&char_tmp);
+      ychar    = char_tmp;
+      xchar    = rd_byte();
+      char_tmp = rd_byte();
       if (xchar > MAX_WIDTH || ychar > MAX_HEIGHT) goto error;
       cave[ychar][xchar].cptr = char_tmp;
-      rd_byte(&char_tmp);
     }
     /* read in the treasure ptr info */
-    rd_byte(&char_tmp);
-    while (char_tmp != 0xFF)
+    for (char_tmp = rd_byte(); char_tmp != 0xFF; char_tmp = rd_byte())
     {
-      ychar = char_tmp;
-      rd_byte(&xchar);
-      rd_byte(&char_tmp);
+      ychar    = char_tmp;
+      xchar    = rd_byte();
+      char_tmp = rd_byte();
       if (xchar > MAX_WIDTH || ychar > MAX_HEIGHT) goto error;
       cave[ychar][xchar].tptr = char_tmp;
-      rd_byte(&char_tmp);
     }
     /* read in the rest of the cave info */
     c_ptr = &cave[0][0];
@@ -875,8 +858,8 @@ int get_char(int *generate)
          total_count < MAX_HEIGHT*MAX_WIDTH;
          total_count += count)
     {
-      rd_byte(&count);
-      rd_byte(&char_tmp);
+      count    = rd_byte();
+      char_tmp = rd_byte();
       for (i = 0; i < count; ++i)
       {
         if (c_ptr >= &cave[MAX_HEIGHT][0]) goto error;
@@ -889,10 +872,10 @@ int get_char(int *generate)
       }
     }
 
-    rd_short((int16u *)&tcptr);
+    tcptr = (int16)rd_short();
     if (tcptr > MAX_TALLOC) goto error;
     for (i = MIN_TRIX; i < tcptr; i++) rd_item(&t_list[i]);
-    rd_short((int16u *)&mfptr);
+    mfptr = (int16)rd_short();
     if (mfptr > MAX_MALLOC) goto error;
     for (i = MIN_MONIX; i < mfptr; i++) rd_monster(&m_list[i]);
 
@@ -912,16 +895,16 @@ int get_char(int *generate)
       for (i = 0; i < MAX_STORES; i++)
       {
         st_ptr = &store[i];
-        rd_long((int32u *)&st_ptr->store_open);
-        rd_short((int16u *)&st_ptr->insult_cur);
-        rd_byte(&st_ptr->owner);
-        rd_byte(&st_ptr->store_ctr);
-        rd_short(&st_ptr->good_buy);
-        rd_short(&st_ptr->bad_buy);
+        st_ptr->store_open = (int32)rd_long();
+        st_ptr->insult_cur = (int16)rd_short();
+        st_ptr->owner      = rd_byte();
+        st_ptr->store_ctr  = rd_byte();
+        st_ptr->good_buy   = rd_short();
+        st_ptr->bad_buy    = rd_short();
         if (st_ptr->store_ctr > STORE_INVEN_MAX) goto error;
         for (j = 0; j < st_ptr->store_ctr; j++)
         {
-          rd_long((int32u *)&st_ptr->store_inven[j].scost);
+          st_ptr->store_inven[j].scost = (int32)rd_long();
           rd_item(&st_ptr->store_inven[j].sitem);
         }
       }
@@ -934,7 +917,7 @@ int get_char(int *generate)
     }
     else if (ver_lt(version_maj, version_min, patch_level, 5, 1, 3))
     {
-      rd_long(&time_saved);
+      time_saved = rd_long();
     }
 
     if (ferror(fileptr)) goto error;
@@ -950,8 +933,6 @@ error:
     }
 
 closefiles:
-    DEBUG(fclose (logfile));
-
     if (fileptr != NULL && fclose(fileptr) < 0) ok = false;
 
     if (!ok)
@@ -988,7 +969,7 @@ closefiles:
         /* rotate store inventory, depending on how old the save file */
         /* is foreach day old (rounded up), call store_maint */
         /* calculate age in seconds */
-        start_time = time((time_t *)0);
+        start_time = time(NULL);
         /* check for reasonable values of time here ... */
         age = (start_time < time_saved) ? 0 : start_time - time_saved;
         age = (age + 43200L) / 86400L;  /* age in days, rounded */
@@ -1022,102 +1003,60 @@ closefiles:
   return false;  /* not reached, unless on mac */
 }
 
-static void wr_byte(c)
-int8u c;
+static void wr_byte(const int8u c)
 {
   xor_byte ^= c;
-  (void) putc((int)xor_byte, fileptr);
-  DEBUG(fprintf (logfile, "BYTE:  %02X = %d\n", (int) xor_byte, (int) c));
+  putc((int)xor_byte, fileptr);
 }
 
-static void wr_short(s)
-int16u s;
+static void wr_short(const int16u s)
 {
-  xor_byte ^= (s & 0xFF);
-  (void) putc((int)xor_byte, fileptr);
-  DEBUG(fprintf (logfile, "SHORT: %02X", (int) xor_byte));
-  xor_byte ^= ((s >> 8) & 0xFF);
-  (void) putc((int)xor_byte, fileptr);
-  DEBUG(fprintf (logfile, " %02X = %d\n", (int) xor_byte, (int) s));
+  /* legacy code copy-pasted xor_byte and putc() calls, but I think calling
+     wr_byte() instead is more readable and maintainable -BS- */
+  wr_byte( s       & 0xFF);
+  wr_byte((s >> 8) & 0xFF);
 }
 
-static void wr_long(l)
-register int32u l;
+static void wr_long(const int32u l)
 {
-  xor_byte ^= (l & 0xFF);
-  (void) putc((int)xor_byte, fileptr);
-  DEBUG(fprintf (logfile, "LONG:  %02X", (int) xor_byte));
-  xor_byte ^= ((l >> 8) & 0xFF);
-  (void) putc((int)xor_byte, fileptr);
-  DEBUG(fprintf (logfile, " %02X", (int) xor_byte));
-  xor_byte ^= ((l >> 16) & 0xFF);
-  (void) putc((int)xor_byte, fileptr);
-  DEBUG(fprintf (logfile, " %02X", (int) xor_byte));
-  xor_byte ^= ((l >> 24) & 0xFF);
-  (void) putc((int)xor_byte, fileptr);
-  DEBUG(fprintf (logfile, " %02X = %ld\n", (int) xor_byte, (long) l));
+  wr_byte( l        & 0xFF);
+  wr_byte((l >>  8) & 0xFF);
+  wr_byte((l >> 16) & 0xFF);
+  wr_byte((l >> 24) & 0xFF);
 }
 
-static void wr_bytes(c, count)
-int8u *c;
-register int count;
+static void wr_bytes(int8u const *const c, const int count)
 {
-  register int i;
-  register int8u *ptr;
+  int i;
 
-  DEBUG(fprintf (logfile, "%d BYTES:", count));
-  ptr = c;
-  for (i = 0; i < count; i++)
-    {
-      xor_byte ^= *ptr++;
-      (void) putc((int)xor_byte, fileptr);
-      DEBUG(fprintf (logfile, "  %02X = %d", (int) xor_byte,
-         (int) (ptr[-1])));
-    }
-  DEBUG(fprintf (logfile, "\n"));
+  if (c == NULL) return;
+  /* legacy code walked a pointer in parallel with the loop counter, but
+     this is more readable. It's not going to be a noticeable performance
+     difference in the 21st century -BS- */
+  for (i = 0; i < count; ++i) wr_byte(c[i]);
 }
 
-static void wr_string(str)
-register char *str;
+static void wr_string(char const *const str)
 {
-  DEBUG(char *s = str);
-  DEBUG(fprintf (logfile, "STRING:"));
-  while (*str != '\0')
-    {
-      xor_byte ^= *str++;
-      (void) putc((int)xor_byte, fileptr);
-      DEBUG(fprintf (logfile, " %02X", (int) xor_byte));
-    }
-  xor_byte ^= *str;
-  (void) putc((int)xor_byte, fileptr);
-  DEBUG(fprintf (logfile, " %02X = \"%s\"\n", (int) xor_byte, s));
+  char const *cptr;
+
+  if (str == NULL) return;
+  for (cptr = str; *cptr != '\0'; ++cptr) wr_byte(*cptr);
+  /* write the NULL terminator too */
+  wr_byte('\0');
 }
 
-static void wr_shorts(s, count)
-int16u *s;
-register int count;
+static void wr_shorts(int16u const *const s, const int count)
 {
-  register int i;
-  register int16u *sptr;
+  int i;
 
-  DEBUG(fprintf (logfile, "%d SHORTS:", count));
-  sptr = s;
-  for (i = 0; i < count; i++)
-    {
-      xor_byte ^= (*sptr & 0xFF);
-      (void) putc((int)xor_byte, fileptr);
-      DEBUG(fprintf (logfile, "  %02X", (int) xor_byte));
-      xor_byte ^= ((*sptr++ >> 8) & 0xFF);
-      (void) putc((int)xor_byte, fileptr);
-      DEBUG(fprintf (logfile, " %02X = %d", (int) xor_byte, (int) sptr[-1]));
-    }
-  DEBUG(fprintf (logfile, "\n"));
+  if (s == NULL) return;
+  for (i = 0; i < count; ++i) wr_short(s[i]);
 }
 
-static void wr_item(item)
-register inven_type *item;
+static void wr_item(inven_type const *const item)
 {
-  DEBUG(fprintf (logfile, "ITEM:\n"));
+  if (item == NULL) return;
   wr_short(item->index);
   wr_byte(item->name2);
   wr_string(item->inscrip);
@@ -1138,10 +1077,9 @@ register inven_type *item;
   wr_byte(item->ident);
 }
 
-static void wr_monster(mon)
-register monster_type *mon;
+static void wr_monster(monster_type const *const mon)
 {
-  DEBUG(fprintf (logfile, "MONSTER:\n"));
+  if (mon == NULL) return;
   wr_short((int16u)mon->hp);
   wr_short((int16u)mon->csleep);
   wr_short((int16u)mon->cspeed);
@@ -1154,100 +1092,64 @@ register monster_type *mon;
   wr_byte(mon->confused);
 }
 
-static void rd_byte(ptr)
-int8u *ptr;
+static int8u rd_byte()
 {
-  int8u c;
-
-  c = getc(fileptr) & 0xFF;
-  *ptr = c ^ xor_byte;
-  xor_byte = c;
-  DEBUG(fprintf (logfile, "BYTE:  %02X = %d\n", (int) c, (int) *ptr));
+  const int8u xor_old = xor_byte;
+  xor_byte = getc(fileptr) & 0xFF;
+  return xor_byte ^ xor_old;
 }
 
-static void rd_short(ptr)
-int16u *ptr;
+static int16u rd_short()
 {
-  int8u c;
-  int16u s;
-
-  c = (getc(fileptr) & 0xFF);
-  s = c ^ xor_byte;
-  xor_byte = (getc(fileptr) & 0xFF);
-  s |= (int16u)(c ^ xor_byte) << 8;
-  *ptr = s;
-  DEBUG(fprintf (logfile, "SHORT: %02X %02X = %d\n", (int) c, (int) xor_byte,\
-     (int) s));
+  return ((int16u)rd_byte()
+       | ((int16u)rd_byte() << 8)
+  );
 }
 
-static void rd_long(ptr)
-int32u *ptr;
+static int32u rd_long()
 {
-  register int32u l;
-  register int8u c;
-
-  c = (getc(fileptr) & 0xFF);
-  l = c ^ xor_byte;
-  xor_byte = (getc(fileptr) & 0xFF);
-  l |= (int32u)(c ^ xor_byte) << 8;
-  DEBUG(fprintf (logfile, "LONG:  %02X %02X ", (int) c, (int) xor_byte));
-  c = (getc(fileptr) & 0xFF);
-  l |= (int32u)(c ^ xor_byte) << 16;
-  xor_byte = (getc(fileptr) & 0xFF);
-  l |= (int32u)(c ^ xor_byte) << 24;
-  *ptr = l;
-  DEBUG(fprintf (logfile, "%02X %02X = %ld\n", (int) c, (int) xor_byte,\
-     (long) l));
+  return ((int32u)rd_byte()
+       | ((int32u)rd_byte() <<  8)
+       | ((int32u)rd_byte() << 16)
+       | ((int32u)rd_byte() << 24)
+  );
 }
 
-static void rd_bytes(ch_ptr, count)
-int8u *ch_ptr;
-register int count;
+static void rd_bytes(int8u *const ch_ptr, const int count)
 {
   register int i;
   register int8u *ptr;
   register int8u c;
 
-  DEBUG(fprintf (logfile, "%d BYTES:", count));
   ptr = ch_ptr;
   for (i = 0; i < count; i++)
     {
       c = (getc(fileptr) & 0xFF);
       *ptr++ = c ^ xor_byte;
       xor_byte = c;
-      DEBUG(fprintf (logfile, "  %02X = %d", (int) c, (int) ptr[-1]));
     }
-  DEBUG(fprintf (logfile, "\n"));
 }
 
-static void rd_string(str)
-char *str;
+static void rd_string(char *const str)
 {
   register int8u c;
+  char *s = str;
 
-  DEBUG(char *s = str);
-  DEBUG(fprintf (logfile, "STRING: "));
   do
-    {
-      c = (getc(fileptr) & 0xFF);
-      *str = c ^ xor_byte;
-      xor_byte = c;
-      DEBUG(fprintf (logfile, "%02X ", (int) c));
-    }
-  while (*str++ != '\0');
-  DEBUG(fprintf (logfile, "= \"%s\"\n", s));
+  {
+    c = (getc(fileptr) & 0xFF);
+    *s = c ^ xor_byte;
+    xor_byte = c;
+  } while (*s++ != '\0');
 }
 
-static void rd_shorts(ptr, count)
-int16u *ptr;
-register int count;
+static void rd_shorts(int16u *const ptr, const int count)
 {
   register int i;
   register int16u *sptr;
   register int16u s;
   int8u c;
 
-  DEBUG(fprintf (logfile, "%d SHORTS:", count));
   sptr = ptr;
   for (i = 0; i < count; i++)
     {
@@ -1256,74 +1158,65 @@ register int count;
       xor_byte = (getc(fileptr) & 0xFF);
       s |= (int16u)(c ^ xor_byte) << 8;
       *sptr++ = s;
-      DEBUG(fprintf (logfile, "  %02X %02X = %d", (int) c, (int) xor_byte,\
-         (int) s));
     }
-  DEBUG(fprintf (logfile, "\n"));
 }
 
-static void rd_item(item)
-register inven_type *item;
+static void rd_item(inven_type *const item)
 {
-  DEBUG(fprintf (logfile, "ITEM:\n"));
-  rd_short(&item->index);
-  rd_byte(&item->name2);
+  item->index  = rd_short();
+  item->name2  = rd_byte();
   rd_string(item->inscrip);
-  rd_long(&item->flags);
-  rd_byte(&item->tval);
-  rd_byte(&item->tchar);
-  rd_short((int16u *)&item->p1);
-  rd_long((int32u *)&item->cost);
-  rd_byte(&item->subval);
-  rd_byte(&item->number);
-  rd_short(&item->weight);
-  rd_short((int16u *)&item->tohit);
-  rd_short((int16u *)&item->todam);
-  rd_short((int16u *)&item->ac);
-  rd_short((int16u *)&item->toac);
+  item->flags  = rd_long();
+  item->tval   = rd_byte();
+  item->tchar  = rd_byte();
+  item->p1     = (int16)rd_short();
+  item->cost   = (int32)rd_long();
+  item->subval = rd_byte();
+  item->number = rd_byte();
+  item->weight = rd_short();
+  item->tohit  = (int16)rd_short();
+  item->todam  = (int16)rd_short();
+  item->ac     = (int16)rd_short();
+  item->toac   = (int16)rd_short();
   rd_bytes(item->damage, 2);
-  rd_byte(&item->level);
-  rd_byte(&item->ident);
+  item->level  = rd_byte();
+  item->ident  = rd_byte();
 }
 
-static void rd_monster(mon)
-register monster_type *mon;
+static void rd_monster(monster_type *const mon)
 {
-  DEBUG(fprintf (logfile, "MONSTER:\n"));
-  rd_short((int16u *)&mon->hp);
-  rd_short((int16u *)&mon->csleep);
-  rd_short((int16u *)&mon->cspeed);
-  rd_short(&mon->mptr);
-  rd_byte(&mon->fy);
-  rd_byte(&mon->fx);
-  rd_byte(&mon->cdis);
-  rd_byte(&mon->ml);
-  rd_byte(&mon->stunned);
-  rd_byte(&mon->confused);
+  mon->hp       = (int16)rd_short();
+  mon->csleep   = (int16)rd_short();
+  mon->cspeed   = (int16)rd_short();
+  mon->mptr     = rd_short();
+  mon->fy       = rd_byte();
+  mon->fx       = rd_byte();
+  mon->cdis     = rd_byte();
+  mon->ml       = rd_byte();
+  mon->stunned  = rd_byte();
+  mon->confused = rd_byte();
 }
 
 /* functions called from death.c to implement the score file */
 
 /* set the local fileptr to the scorefile fileptr */
-void set_fileptr(file)
-FILE *file;
+void set_fileptr(FILE *file)
 {
   fileptr = file;
 }
 
-void wr_highscore(score)
-high_scores *score;
+void wr_highscore(high_scores const *const score)
 {
-  DEBUG(logfile = fopen ("IO_LOG", "a"));
-  DEBUG(fprintf (logfile, "Saving score:\n"));
+  if (score == NULL) return;
+
   /* Save the encryption byte for robustness.  */
   wr_byte(xor_byte);
 
-  wr_long((int32u) score->points);
-  wr_long((int32u) score->birth_date);
-  wr_short((int16u) score->uid);
-  wr_short((int16u) score->mhp);
-  wr_short((int16u) score->chp);
+  wr_long((int32u)score->points);
+  wr_long((int32u)score->birth_date);
+  wr_short((int16u)score->uid);
+  wr_short((int16u)score->mhp);
+  wr_short((int16u)score->chp);
   wr_byte(score->dun_level);
   wr_byte(score->lev);
   wr_byte(score->max_dlv);
@@ -1332,29 +1225,24 @@ high_scores *score;
   wr_byte(score->class);
   wr_bytes((int8u *)score->name, PLAYER_NAME_SIZE);
   wr_bytes((int8u *)score->died_from, 25);
-  DEBUG(fclose (logfile));
 }
 
-void rd_highscore(score)
-high_scores *score;
+void rd_highscore(high_scores *const score)
 {
-  DEBUG(logfile = fopen ("IO_LOG", "a"));
-  DEBUG(fprintf (logfile, "Reading score:\n"));
   /* Read the encryption byte.  */
-  rd_byte (&xor_byte);
+  xor_byte = rd_byte();
 
-  rd_long((int32u *)&score->points);
-  rd_long((int32u *)&score->birth_date);
-  rd_short((int16u *)&score->uid);
-  rd_short((int16u *)&score->mhp);
-  rd_short((int16u *)&score->chp);
-  rd_byte(&score->dun_level);
-  rd_byte(&score->lev);
-  rd_byte(&score->max_dlv);
-  rd_byte(&score->sex);
-  rd_byte(&score->race);
-  rd_byte(&score->class);
+  score->points     = (int32)rd_long();
+  score->birth_date = (int32)rd_long();
+  score->uid        = (int16)rd_short();
+  score->mhp        = (int16)rd_short();
+  score->chp        = (int16)rd_short();
+  score->dun_level  = rd_byte();
+  score->lev        = rd_byte();
+  score->max_dlv    = rd_byte();
+  score->sex        = rd_byte();
+  score->race       = rd_byte();
+  score->class      = rd_byte();
   rd_bytes((int8u *)score->name, PLAYER_NAME_SIZE);
   rd_bytes((int8u *)score->died_from, 25);
-  DEBUG(fclose (logfile));
 }
