@@ -312,11 +312,8 @@ umoria.");
 #endif
 #endif
 
-  /* set the static fileptr in save.c to the highscore file pointer */
-  set_fileptr(highscore_fp);
-
   rank = 1;
-  rd_highscore(&score);
+  rd_highscore(highscore_fp, &score);
   while (!feof(highscore_fp))
     {
       i = 1;
@@ -343,7 +340,7 @@ umoria.");
 	      prt(string, ++i, 0);
 	    }
 	  rank++;
-	  rd_highscore(&score);
+	  rd_highscore(highscore_fp, &score);
 	}
       prt("Rank  Points Name              Sex Race       Class  Lvl Killed By"
 	  , 0, 0);
@@ -761,12 +758,9 @@ are not saved.");
       return;
     }
 
-  /* set the static fileptr in save.c to the highscore file pointer */
-  set_fileptr(highscore_fp);
-
   i = 0;
-  curpos = ftell (highscore_fp);
-  rd_highscore(&old_entry);
+  curpos = ftell(highscore_fp);
+  rd_highscore(highscore_fp, &old_entry);
   while (!feof(highscore_fp))
     {
       if (new_entry.points >= old_entry.points)
@@ -797,7 +791,7 @@ are not saved.");
 	  return;
 	}
       curpos = ftell (highscore_fp);
-      rd_highscore(&old_entry);
+      rd_highscore(highscore_fp, &old_entry);
     }
 
   if (feof(highscore_fp))
@@ -808,7 +802,7 @@ are not saved.");
 #else
       (void) fseek (highscore_fp, (off_t)curpos, L_SET);
 #endif
-      wr_highscore(&new_entry);
+      wr_highscore(highscore_fp, &new_entry);
     }
   else
     {
@@ -830,7 +824,7 @@ are not saved.");
 		       -(off_t)sizeof(high_scores)-(off_t)sizeof(char),
 		       L_INCR);
 #endif
-	  wr_highscore(&entry);
+	  wr_highscore(highscore_fp, &entry);
 	  /* under unix and VMS, only allow one sex/race/class combo per
 	     person, on single user system, allow any number of entries, but
 	     try to prevent multiple entries per character by checking for
@@ -856,7 +850,7 @@ are not saved.");
 	  (void) fseek(highscore_fp, (off_t)0, L_INCR);
 #endif
 	  curpos = ftell (highscore_fp);
-	  rd_highscore(&old_entry);
+	  rd_highscore(highscore_fp, &old_entry);
 	}
       if (feof(highscore_fp))
 	{
@@ -865,7 +859,7 @@ are not saved.");
 #else
 	  (void) fseek (highscore_fp, (off_t)curpos, L_SET);
 #endif
-	  wr_highscore(&entry);
+	  wr_highscore(highscore_fp, &entry);
 	}
     }
 

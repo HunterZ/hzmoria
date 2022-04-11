@@ -500,9 +500,8 @@ int32 rnd();
 int save_char();
 int _save_char();
 int get_char(int *generate);
-void set_fileptr();
-void wr_highscore();
-void rd_highscore();
+void wr_highscore(FILE* file_ptr, high_scores const *const score);
+void rd_highscore(FILE* file_ptr, high_scores *const score);
 
 /* scrolls.c */
 void read_scroll();
