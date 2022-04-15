@@ -59,7 +59,6 @@ static void   rd_monster(FILE *, monster_type *const);
 
 /* these are used for the save file, to avoid having to pass them to every
    procedure */
-// static FILE *fileptr;
 static int8u xor_byte;
 static int from_savefile;  /* can overwrite old savefile when save */
 static int32u start_time;  /* time that play started */

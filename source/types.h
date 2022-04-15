@@ -332,12 +332,16 @@ typedef struct cave_type
   int8u cptr;
   int8u tptr;
   int8u fval;
-  bool  lr : 1; /* room should be lit with perm light, walls with
-                   this set should be perm lit after tunneled out */
-  bool  fm : 1; /* field mark, used for traps/doors/stairs, object is
-                   hidden if fm is false */
-  bool  pl : 1; /* permanent light, used for walls and lighted rooms */
-  bool  tl : 1; /* temporary light, used for player's lamp light,etc.*/
+  /* room should be lit with perm light, walls with this set should be perm
+     lit after tunneled out */
+  bool  lr : 1;
+  /* field mark, used for traps/doors/stairs, object is hidden if fm is
+     false */
+  bool  fm : 1;
+  /* permanent light, used for walls and lighted rooms */
+  bool  pl : 1;
+  /* temporary light, used for player's lamp light,etc.*/
+  bool  tl : 1;
 } cave_type;
 
 typedef struct owner_type
