@@ -497,9 +497,9 @@ void set_rnd_seed();
 int32 rnd();
 
 /* save.c */
-int save_char();
-int _save_char();
-int get_char(int *generate);
+bool save_char();
+bool _save_char(char const *const fnam);
+bool get_char(int *generate);
 void wr_highscore(FILE* file_ptr, high_scores const *const score);
 void rd_highscore(FILE* file_ptr, high_scores *const score);
 
