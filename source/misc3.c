@@ -649,16 +649,16 @@ void prt_study()
 /* Prints winner status on display			-RAK-	*/
 void prt_winner()
 {
-  if (noscore & 0x2)
+  if (noscore & NS_WIZARD)
     {
       if (wizard)
 	put_buffer("Is wizard  ", 22, 0);
       else
 	put_buffer("Was wizard ", 22, 0);
     }
-  else if (noscore & 0x1)
+  else if (noscore & NS_RESURRECTED)
     put_buffer("Resurrected", 22, 0);
-  else if (noscore & 0x4)
+  else if (noscore & NS_DUPLICATE)
     put_buffer ("Duplicate", 22, 0);
   else if (total_winner)
     put_buffer("*Winner*   ", 22, 0);
@@ -2267,7 +2267,7 @@ int enter_wiz_mode()
     }
   if (noscore || answer)
     {
-      noscore |= 0x2;
+      noscore |= NS_WIZARD;
       wizard = true;
       return(true);
     }

@@ -191,8 +191,8 @@ int multiply_monster();
 void creatures();
 
 /* death.c */
-void display_scores();
-int duplicate_character();
+void display_scores(const bool player_only);
+bool duplicate_character();
 int32 total_points();
 void exit_game();
 
@@ -500,6 +500,10 @@ int32 rnd();
 bool save_char();
 bool _save_char(char const *const fnam);
 bool get_char(int *generate);
+bool ver_lt(const int8u lmaj, const int8u lmin, const int8u lpat,
+            const int8u rmaj, const int8u rmin, const int8u rpat);
+bool ver_ge(const int8u lmaj, const int8u lmin, const int8u lpat,
+            const int8u rmaj, const int8u rmin, const int8u rpat);
 void wr_highscore(FILE* file_ptr, high_scores const *const score);
 void rd_highscore(FILE* file_ptr, high_scores *const score);
 

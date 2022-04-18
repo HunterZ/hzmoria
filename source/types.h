@@ -155,7 +155,6 @@ typedef struct inven_type
 } inven_type;
 
 #define PLAYER_NAME_SIZE 27
-
 typedef struct player_type
 {
   struct misc
@@ -372,7 +371,7 @@ typedef struct store_type
   inven_record store_inven[STORE_INVEN_MAX];
 } store_type;
 
-/* 64 bytes for this structure */
+#define DIED_FROM_SIZE 25
 typedef struct high_scores
 {
   int32 points;
@@ -387,7 +386,7 @@ typedef struct high_scores
   int8u race;
   int8u class;
   char name[PLAYER_NAME_SIZE];
-  char died_from[25];
+  char died_from[DIED_FROM_SIZE];
 } high_scores;
 
 #endif /* TYPES_H */

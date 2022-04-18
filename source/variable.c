@@ -61,7 +61,7 @@ int32 turn = -1;		/* Cur turn of game    */
 int wizard = false;		/* Wizard flag	      */
 int to_be_wizard = false;	/* used during startup, when -w option used */
 bool panic_save = false;	/* this is true if playing from a panic save */
-int16 noscore = false;		/* Don't log the game. -CJS- */
+int16 noscore = 0;		/* Don't log the game. -CJS- */
 
 int rogue_like_commands;	/* set in config.h/main.c */
 

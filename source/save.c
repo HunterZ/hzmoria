@@ -36,10 +36,6 @@
 #include "externs.h"
 
 static bool   sv_write(FILE *, int8u *const);
-static bool   ver_lt(const int8u, const int8u, const int8u,
-                     const int8u, const int8u, const int8u);
-static bool   ver_ge(const int8u, const int8u, const int8u,
-                     const int8u, const int8u, const int8u);
 static void   wr_int8u(FILE *, int8u *const, const int8u);
 static void   wr_int16u(FILE *, int8u *const, const int16u);
 static void   wr_int32u(FILE *, int8u *const, const int32u);
@@ -61,7 +57,7 @@ static void   rd_monster(FILE *, int8u *const, monster_type *const);
 
 /* these are used for the save file, to avoid having to pass them to every
    procedure */
-static int from_savefile;  /* can overwrite old savefile when save */
+static bool from_savefile = false;  /* can overwrite old savefile when save */
 static int32u start_time;  /* time that play started */
 
 /* This save package was brought to you by -JWT- and -RAK-
@@ -480,7 +476,7 @@ bool _save_char(char const *const fnam)
 }
 
 /* true if left version is less/older than right version */
-static bool ver_lt(
+bool ver_lt(
   const int8u lmaj, const int8u lmin, const int8u lpat,
   const int8u rmaj, const int8u rmin, const int8u rpat
 )
@@ -498,7 +494,7 @@ static bool ver_lt(
 
 /* true if left version is greater than or equal to right version
    i.e. left is same or newer than right */
-static bool ver_ge(
+bool ver_ge(
   const int8u lmaj, const int8u lmin, const int8u lpat,
   const int8u rmaj, const int8u rmin, const int8u rpat
 )
@@ -825,7 +821,7 @@ bool get_char(int *generate)
         /* set noscore to indicate a resurrection, and don't enter
            wizard mode */
         to_be_wizard = false;
-        noscore |= 0x1;
+        noscore |= NS_RESURRECTED;
       }
       put_qio();
       goto closefiles;
@@ -962,7 +958,7 @@ closefiles:
     else
     {
       /* let the user overwrite the old savefile when save/quit */
-      from_savefile = 1;
+      from_savefile = true;
 
       signals();
 
@@ -972,12 +968,12 @@ closefiles:
                       "Score will not be added to scoreboard.");
         msg_print(temp);
       }
-      else if ((!noscore & 0x04) && duplicate_character())
+      else if ((!noscore & NS_DUPLICATE) && duplicate_character())
       {
         sprintf (temp, "This character is already on the " \
                        "scoreboard; it will not be scored again.");
         msg_print(temp);
-        noscore |= 0x4;
+        noscore |= NS_DUPLICATE;
       }
 
       if (turn >= 0)

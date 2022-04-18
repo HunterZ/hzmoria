@@ -675,7 +675,7 @@
 /* Number of entries allowed in the scorefile.  */
 #define SCOREFILE_SIZE 1000
 
-/* Save file bit flags */
+/* Save file bit flags -BS- */
 #define SV_FIND_CUT            0x00000001L
 #define SV_FIND_EXAMINE        0x00000002L
 #define SV_FIND_PRSELF         0x00000004L
@@ -689,5 +689,10 @@
 #define SV_DISPLAY_COUNTS      0x00000400L
 #define SV_TOTAL_WINNER        0x40000000L
 #define SV_DEATH               0x80000000L /* sign bit */
+
+/* noscore bit flags -BS- */
+#define NS_RESURRECTED 0x1
+#define NS_WIZARD      0x2
+#define NS_DUPLICATE   0x4
 
 #endif /* CONFIG_H */
